@@ -6,6 +6,7 @@ import fastairuntime.FastAIRuntime;
 import fastairuntime.FastCommand;
 import fastairuntime.FastObservation;
 import fastansi.FastANSI;
+import fastemojis.FastEmojis;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public final class FastAIAgent {
     }
 
     public void run(String goal) {
-        System.out.println(TN_GOAL + "Agent Goal: " + goal + FastANSI.RESET);
+        System.out.println(TN_GOAL + FastEmojis.ROBOT + "  Goal: " + goal + FastANSI.RESET);
         
         // 1. Plan
         StringBuilder toolsDef = new StringBuilder();
@@ -62,7 +63,7 @@ public final class FastAIAgent {
                                        .replace("\\u003cThoughts\\u003e", "<thoughts>")
                                        .replace("\\u003c/Thoughts\\u003e", "</thoughts>");
 
-        System.out.println(TN_HEADER + "--- Planner Thought Trace ---" + FastANSI.RESET);
+        System.out.println(TN_HEADER + FastEmojis.THINKING + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL + " Thought Trace " + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_TOP_RIGHT + FastANSI.RESET);
         if (normalizedRaw.contains("<thoughts>") && normalizedRaw.contains("</thoughts>")) {
             int start = normalizedRaw.indexOf("<thoughts>") + 10;
             int end = normalizedRaw.indexOf("</thoughts>");
@@ -74,7 +75,7 @@ public final class FastAIAgent {
         } else {
             System.out.println(TN_THOUGHT + normalizedRaw + FastANSI.RESET);
         }
-        System.out.println(TN_HEADER + "-----------------------------" + FastANSI.RESET);
+        System.out.println(TN_HEADER + "   " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + FastANSI.RESET);
 
         // Parse generated command (extract last line or clean tool call format)
         String planLine = normalizedRaw;
@@ -96,7 +97,7 @@ public final class FastAIAgent {
                            .replace("`", "")
                            .trim();
                            
-        System.out.println(TN_CMD + "Extracted Command: " + planLine + FastANSI.RESET);
+        System.out.println(TN_CMD + FastEmojis.LIGHTNING + "  " + planLine + FastANSI.RESET);
 
         // Parse generated command(s) line-by-line for multi-step execution
         String[] lines = planLine.split("\n");
@@ -140,13 +141,14 @@ public final class FastAIAgent {
                 }
 
                 if (!args.isEmpty()) {
-                    System.out.println(TN_STEP + "Executing: " + toolName + " " + args + FastANSI.RESET);
+                    System.out.println(TN_STEP + FastEmojis.GEAR + "  " + toolName + " " + args + FastANSI.RESET);
                     // 2. Act
                     FastCommand cmd = new FastCommand(toolName, args);
                     FastObservation obs = runtime.execute(cmd);
 
                     // 3. Observe
-                    System.out.println(TN_OBS + "  " + (obs.success() ? "[OK]  " : "[FAIL]") + " " + obs.message() + FastANSI.RESET);
+                    String icon = obs.success() ? FastEmojis.CHECK : FastEmojis.ERROR_RED;
+                    System.out.println(TN_OBS + "   " + icon + "  " + obs.message() + FastANSI.RESET);
                     memory.user(goal);
                     memory.assistant(obs.message());
                 }
