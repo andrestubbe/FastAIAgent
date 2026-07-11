@@ -22,7 +22,7 @@ public final class FastAIAgent {
     }
 
     public void run(String goal) {
-        System.out.println("Agent Goal: " + goal);
+        System.out.println(FastANSI.FG_YELLOW + "Agent Goal: " + goal + FastANSI.RESET);
         
         // 1. Plan
         StringBuilder toolsDef = new StringBuilder();
