@@ -1,4 +1,5 @@
 demo\chapters\chapter05\MemoryAugmentedAgentDemo.class
+demo\chapters\chapter05\CalculationProtocolAgentDemo.class
 demo\chapters\chapter05\MultiStepReasoningAgentDemo.class
 demo\chapters\chapter05\PlanningAgentDemo.class
 fastaiagent\FastAIAgent.class
