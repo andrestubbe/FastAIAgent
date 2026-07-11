@@ -33,6 +33,7 @@ public final class FastAIAgent {
                             "Available tools:\n" +
                             toolsDef.toString() +
                             "Provide your step-by-step thinking inside <thoughts></thoughts> blocks first, then output the final tool call.\n" +
+                            "Do not wrap the final tool call in any code blocks or custom tags like <tool_call>.\n" +
                             "Final Tool Call Output format: tool_name|arg_key=arg_value. Example: windows.open_app|path=notepad.exe";
         
         String planRaw = brain.ask(planPrompt).trim();
@@ -70,6 +71,15 @@ public final class FastAIAgent {
         } else if (normalizedRaw.toLowerCase().contains("</thoughts>")) {
             planLine = normalizedRaw.substring(normalizedRaw.toLowerCase().indexOf("</thoughts>") + 11).trim();
         }
+        
+        // Strip custom XML tags if model generated them
+        planLine = planLine.replace("<tool_call>", "")
+                           .replace("</tool_call>", "")
+                           .replace("\\u003ctool_call\\u003e", "")
+                           .replace("\\u003c/tool_call\\u003e", "")
+                           .replace("`", "")
+                           .trim();
+                           
         System.out.println("Extracted Command: " + planLine);
 
         // Parse generated command
