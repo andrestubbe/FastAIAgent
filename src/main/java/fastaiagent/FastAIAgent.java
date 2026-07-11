@@ -11,13 +11,13 @@ import java.util.Map;
 
 public final class FastAIAgent {
 
-    // Tokyo Night color palette
-    private static final String TN_GOAL    = FastANSI.fg(224, 175, 104); // #e0af68 warm gold
-    private static final String TN_HEADER  = FastANSI.fg(125, 207, 255); // #7dcfff sky cyan
-    private static final String TN_THOUGHT = FastANSI.fg(86,  95,  137); // #565f89 muted purple
-    private static final String TN_CMD     = FastANSI.fg(158, 206, 106); // #9ece6a green
-    private static final String TN_STEP    = FastANSI.fg(187, 154, 247); // #bb9af7 lavender
-    private static final String TN_OBS     = FastANSI.fg(192, 202, 245); // #c0caf5 soft white
+    // Color palette — blues & yellows
+    private static final String TN_GOAL    = FastANSI.fg(255, 215,   0); // vivid gold
+    private static final String TN_HEADER  = FastANSI.fg(122, 162, 247); // bright blue  #7aa2f7
+    private static final String TN_THOUGHT = FastANSI.fg(125, 207, 255); // sky blue     #7dcfff
+    private static final String TN_CMD     = FastANSI.fg(255, 158, 100); // amber orange #ff9e64
+    private static final String TN_STEP    = FastANSI.fg(224, 175, 104); // warm gold    #e0af68
+    private static final String TN_OBS     = FastANSI.fg(137, 221, 255); // ice blue     #89ddff
 
     private final AI brain;
     private final FastAIRuntime runtime;
@@ -146,7 +146,7 @@ public final class FastAIAgent {
                     FastObservation obs = runtime.execute(cmd);
 
                     // 3. Observe
-                    System.out.println(TN_OBS + "  → " + (obs.success() ? "✓" : "✗") + " " + obs.message() + FastANSI.RESET);
+                    System.out.println(TN_OBS + "  " + (obs.success() ? "[OK]  " : "[FAIL]") + " " + obs.message() + FastANSI.RESET);
                     memory.user(goal);
                     memory.assistant(obs.message());
                 }
