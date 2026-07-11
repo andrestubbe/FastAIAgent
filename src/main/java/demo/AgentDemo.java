@@ -24,7 +24,7 @@ public final class AgentDemo {
             System.err.println("Error: GEMINI_API_KEY environment variable is not set.");
             return;
         }
-        AI brain = FastAI.connect("gemini:gemini-1.5-flash", apiKey);
+        AI brain = FastAI.connect("gemini:gemini-2.5-flash", apiKey);
         ConversationHistory memory = new ConversationHistory();
 
         FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
