@@ -16,7 +16,7 @@ import fastairuntime.tools.WindowsAppTool;
 public final class MemoryAugmentedAgentDemo {
 
     public static void main(String[] args) {
-        System.out.println("=== Running Chapter 05: Memory-Augmented Agent Demo ===");
+        System.out.println("=== Running Memory-Augmented Agent Demo ===");
 
         FastAIRuntime runtime = new FastAIRuntime();
         runtime.register(new WindowsAppTool());

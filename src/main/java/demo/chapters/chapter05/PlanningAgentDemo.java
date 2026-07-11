@@ -15,7 +15,7 @@ import fastairuntime.tools.WindowsAppTool;
 public final class PlanningAgentDemo {
 
     public static void main(String[] args) {
-        System.out.println("=== Running Chapter 05: Planning Agent Demo ===");
+        System.out.println("=== Running Planning Agent Demo ===");
 
         FastAIRuntime runtime = new FastAIRuntime();
         runtime.register(new WindowsAppTool());
