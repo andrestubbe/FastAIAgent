@@ -32,20 +32,26 @@ public final class FastAIAgent {
                             "Final Tool Call Output format: tool_name|arg_key=arg_value. Example: windows.open_app|path=notepad.exe";
         
         String planRaw = brain.ask(planPrompt).trim();
+        // Normalise unicode escaped tags if returned in raw streams
+        String cleanRaw = planRaw.replace("\\u003cthoughts\\u003e", "<thoughts>")
+                                 .replace("\\u003c/thoughts\\u003e", "</thoughts>")
+                                 .replace("\u003cthoughts\u003e", "<thoughts>")
+                                 .replace("\u003c/thoughts\u003e", "</thoughts>");
+
         System.out.println("--- Planner Thought Trace ---");
-        if (planRaw.contains("<thoughts>") && planRaw.contains("</thoughts>")) {
-            int start = planRaw.indexOf("<thoughts>") + 10;
-            int end = planRaw.indexOf("</thoughts>");
-            System.out.println(planRaw.substring(start, end).trim());
+        if (cleanRaw.contains("<thoughts>") && cleanRaw.contains("</thoughts>")) {
+            int start = cleanRaw.indexOf("<thoughts>") + 10;
+            int end = cleanRaw.indexOf("</thoughts>");
+            System.out.println(cleanRaw.substring(start, end).trim());
         } else {
-            System.out.println(planRaw);
+            System.out.println(cleanRaw);
         }
         System.out.println("-----------------------------");
 
         // Parse generated command (extract last line or clean tool call format)
-        String planLine = planRaw;
-        if (planRaw.contains("</thoughts>")) {
-            planLine = planRaw.substring(planRaw.indexOf("</thoughts>") + 11).trim();
+        String planLine = cleanRaw;
+        if (cleanRaw.contains("</thoughts>")) {
+            planLine = cleanRaw.substring(cleanRaw.indexOf("</thoughts>") + 11).trim();
         }
         System.out.println("Extracted Command: " + planLine);
 
