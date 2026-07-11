@@ -79,8 +79,12 @@ public final class FastAIAgent {
         // Strip custom XML tags if model generated them
         planLine = planLine.replace("<tool_call>", "")
                            .replace("</tool_call>", "")
+                           .replace("<tool_name>", "")
+                           .replace("</tool_name>", "")
                            .replace("\\u003ctool_call\\u003e", "")
                            .replace("\\u003c/tool_call\\u003e", "")
+                           .replace("\\u003ctool_name\\u003e", "")
+                           .replace("\\u003c/tool_name\\u003e", "")
                            .replace("`", "")
                            .trim();
                            
