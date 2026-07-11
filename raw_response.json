@@ -1,0 +1,31 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "windows.open_app|path=notepad.exe"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 88,
+    "candidatesTokenCount": 11,
+    "totalTokenCount": 216,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 88
+      }
+    ],
+    "thoughtsTokenCount": 117,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "qxRSapeeCYm9vdIPnsWUmAE"
+}
