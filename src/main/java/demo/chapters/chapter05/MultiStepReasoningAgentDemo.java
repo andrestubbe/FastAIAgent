@@ -24,7 +24,13 @@ public final class MultiStepReasoningAgentDemo {
         runtime.register(new KeyboardTypeTool());
         runtime.register(new FileSaveTool());
 
-        AI brain = FastAI.connect("ollama:llama3.2:3b");
+        String apiKey = System.getenv("GEMINI_API_KEY");
+        if (apiKey == null || apiKey.isEmpty()) {
+            System.err.println("Error: GEMINI_API_KEY environment variable is not set.");
+            return;
+        }
+
+        AI brain = FastAI.connect("gemini:gemini-2.5-flash", apiKey);
         ConversationHistory memory = new ConversationHistory();
         FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
 
