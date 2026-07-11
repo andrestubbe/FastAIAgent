@@ -18,8 +18,13 @@ public final class AgentDemo {
         runtime.register(new WindowsAppTool());
         runtime.register(new KeyboardTypeTool());
 
-        // Connect Brain via Ollama (Llama 3.2 3B)
-        AI brain = FastAI.connect("ollama:llama3.2:3b");
+        // Connect Brain via Gemini
+        String apiKey = System.getenv("GEMINI_API_KEY");
+        if (apiKey == null || apiKey.isEmpty()) {
+            System.err.println("Error: GEMINI_API_KEY environment variable is not set.");
+            return;
+        }
+        AI brain = FastAI.connect("gemini:gemini-1.5-flash", apiKey);
         ConversationHistory memory = new ConversationHistory();
 
         FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
