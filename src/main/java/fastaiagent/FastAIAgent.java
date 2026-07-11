@@ -11,6 +11,14 @@ import java.util.Map;
 
 public final class FastAIAgent {
 
+    // Tokyo Night color palette
+    private static final String TN_GOAL    = FastANSI.fg(224, 175, 104); // #e0af68 warm gold
+    private static final String TN_HEADER  = FastANSI.fg(125, 207, 255); // #7dcfff sky cyan
+    private static final String TN_THOUGHT = FastANSI.fg(86,  95,  137); // #565f89 muted purple
+    private static final String TN_CMD     = FastANSI.fg(158, 206, 106); // #9ece6a green
+    private static final String TN_STEP    = FastANSI.fg(187, 154, 247); // #bb9af7 lavender
+    private static final String TN_OBS     = FastANSI.fg(192, 202, 245); // #c0caf5 soft white
+
     private final AI brain;
     private final FastAIRuntime runtime;
     private final ConversationHistory memory;
@@ -22,7 +30,7 @@ public final class FastAIAgent {
     }
 
     public void run(String goal) {
-        System.out.println(FastANSI.FG_YELLOW + "Agent Goal: " + goal + FastANSI.RESET);
+        System.out.println(TN_GOAL + "Agent Goal: " + goal + FastANSI.RESET);
         
         // 1. Plan
         StringBuilder toolsDef = new StringBuilder();
@@ -54,19 +62,19 @@ public final class FastAIAgent {
                                        .replace("\\u003cThoughts\\u003e", "<thoughts>")
                                        .replace("\\u003c/Thoughts\\u003e", "</thoughts>");
 
-        System.out.println(FastANSI.FG_CYAN + "--- Planner Thought Trace ---" + FastANSI.RESET);
+        System.out.println(TN_HEADER + "--- Planner Thought Trace ---" + FastANSI.RESET);
         if (normalizedRaw.contains("<thoughts>") && normalizedRaw.contains("</thoughts>")) {
             int start = normalizedRaw.indexOf("<thoughts>") + 10;
             int end = normalizedRaw.indexOf("</thoughts>");
-            System.out.println(FastANSI.FG_BRIGHT_BLACK + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
+            System.out.println(TN_THOUGHT + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
         } else if (normalizedRaw.toLowerCase().contains("<thoughts>") && normalizedRaw.toLowerCase().contains("</thoughts>")) {
             int start = normalizedRaw.toLowerCase().indexOf("<thoughts>") + 10;
             int end = normalizedRaw.toLowerCase().indexOf("</thoughts>");
-            System.out.println(FastANSI.FG_BRIGHT_BLACK + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
+            System.out.println(TN_THOUGHT + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
         } else {
-            System.out.println(FastANSI.FG_BRIGHT_BLACK + normalizedRaw + FastANSI.RESET);
+            System.out.println(TN_THOUGHT + normalizedRaw + FastANSI.RESET);
         }
-        System.out.println(FastANSI.FG_CYAN + "-----------------------------" + FastANSI.RESET);
+        System.out.println(TN_HEADER + "-----------------------------" + FastANSI.RESET);
 
         // Parse generated command (extract last line or clean tool call format)
         String planLine = normalizedRaw;
@@ -88,7 +96,7 @@ public final class FastAIAgent {
                            .replace("`", "")
                            .trim();
                            
-        System.out.println(FastANSI.FG_GREEN + "Extracted Command: " + planLine + FastANSI.RESET);
+        System.out.println(TN_CMD + "Extracted Command: " + planLine + FastANSI.RESET);
 
         // Parse generated command(s) line-by-line for multi-step execution
         String[] lines = planLine.split("\n");
@@ -116,22 +124,29 @@ public final class FastAIAgent {
                 Map<String, Object> args = new HashMap<>();
                 
                 // Handle multiple comma separated arguments: arg1=val1,arg2=val2
-                String[] argPairs = parts[1].split(",");
+                // Split on | with limit 2 to preserve | in values
+                String argsRaw = cleanLine.split("\\|", 2)[1];
+                String[] argPairs = argsRaw.split(",");
                 for (String pair : argPairs) {
-                    String[] kv = pair.split("=");
+                    // Split on first = only (values may contain = signs)
+                    String[] kv = pair.split("=", 2);
                     if (kv.length == 2) {
-                        args.put(kv[0].trim(), kv[1].trim());
+                        String key = kv[0].trim();
+                        String val = kv[1].trim()
+                                          .replaceAll("^\"|\"$", "")  // strip surrounding "
+                                          .replaceAll("^'|'$", "");   // strip surrounding '
+                        args.put(key, val);
                     }
                 }
 
                 if (!args.isEmpty()) {
-                    System.out.println("Executing command step: " + toolName + " with " + args);
+                    System.out.println(TN_STEP + "Executing: " + toolName + " " + args + FastANSI.RESET);
                     // 2. Act
                     FastCommand cmd = new FastCommand(toolName, args);
                     FastObservation obs = runtime.execute(cmd);
 
                     // 3. Observe
-                    System.out.println("Step Observation: success=" + obs.success() + ", msg=" + obs.message());
+                    System.out.println(TN_OBS + "  → " + (obs.success() ? "✓" : "✗") + " " + obs.message() + FastANSI.RESET);
                     memory.user(goal);
                     memory.assistant(obs.message());
                 }
