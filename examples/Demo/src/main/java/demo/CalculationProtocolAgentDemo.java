@@ -1,8 +1,9 @@
-package demo.chapters.chapter05;
+package demo;
 
 import fastai.AI;
 import fastai.FastAI;
 import fastaiagent.FastAIAgent;
+import fastaibot.FastAIBot;
 import fastaimemory.ConversationHistory;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.tools.FileSaveTool;
@@ -26,8 +27,9 @@ public final class CalculationProtocolAgentDemo {
         runtime.register(new FileSaveTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
-        ConversationHistory memory = new ConversationHistory();
-        FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
+        java.util.function.Consumer<String> out = System.out::print;
+        FastAIBot bot = new FastAIBot(brain, "", out, out);
+        FastAIAgent agent = new FastAIAgent(bot, runtime);
 
         // Step 1: Open Calculator
         agent.run("Open the Windows Calculator application located at calc.exe");

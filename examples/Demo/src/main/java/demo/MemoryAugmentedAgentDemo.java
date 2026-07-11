@@ -1,4 +1,4 @@
-package demo.chapters.chapter05;
+package demo;
 
 import fastai.AI;
 import fastai.FastAI;
@@ -24,10 +24,9 @@ public final class MemoryAugmentedAgentDemo {
         runtime.register(new KeyboardTypeTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
-        
-        // Dynamic memory state tracker
-        ConversationHistory memory = new ConversationHistory();
-        FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
+        java.util.function.Consumer<String> out = System.out::print;
+        fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, "", out, out);
+        FastAIAgent agent = new FastAIAgent(bot, runtime);
 
         // Sequence Step 1
         System.out.println("\n--- STEP 1 ---");

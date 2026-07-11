@@ -57,6 +57,17 @@
             <artifactId>FastANSI</artifactId>
             <version>0.1.1</version>
         </dependency>
+        <!-- FastAIBot dependency -->
+        <dependency>
+            <groupId>com.github.andrestubbe</groupId>
+            <artifactId>FastAIBot</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.andrestubbe</groupId>
+            <artifactId>FastAI</artifactId>
+            <version>0.1.0</version>
+        </dependency>
         <!-- FastEmojis dependency -->
         <dependency>
             <groupId>com.github.andrestubbe</groupId>

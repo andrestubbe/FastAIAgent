@@ -1,13 +1,16 @@
-package demo.chapters.chapter05;
+package demo;
 
 import fastai.AI;
 import fastai.FastAI;
 import fastaiagent.FastAIAgent;
+import fastaibot.FastAIBot;
 import fastaimemory.ConversationHistory;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.tools.FileSaveTool;
 import fastairuntime.tools.KeyboardTypeTool;
 import fastairuntime.tools.WindowsAppTool;
+
+import java.util.function.Consumer;
 
 /**
  * Demo referencing Chapter 5: Foundational Cognitive Architectures
@@ -26,8 +29,9 @@ public final class MultiStepReasoningAgentDemo {
         runtime.register(new FileSaveTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
-        ConversationHistory memory = new ConversationHistory();
-        FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
+        Consumer<String> out = System.out::print;
+        FastAIBot bot = new FastAIBot(brain, "", out, out);
+        FastAIAgent agent = new FastAIAgent(bot, runtime);
 
         // Execute complex compound workflow
         agent.run("Create a local text file at target/reasoning_output.txt with content 'Executed multi-step logic successfully.'");

@@ -1,12 +1,12 @@
 package fastaiagent;
 
-import fastai.AI;
-import fastaimemory.ConversationHistory;
+import fastaibot.FastAIBot;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.FastCommand;
 import fastairuntime.FastObservation;
 import fastansi.FastANSI;
 import fastemojis.FastEmojis;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,14 +20,12 @@ public final class FastAIAgent {
     private static final String TN_STEP    = FastANSI.fg(224, 175, 104); // warm gold    #e0af68
     private static final String TN_OBS     = FastANSI.fg(137, 221, 255); // ice blue     #89ddff
 
-    private final AI brain;
+    private final FastAIBot bot;
     private final FastAIRuntime runtime;
-    private final ConversationHistory memory;
 
-    public FastAIAgent(AI brain, FastAIRuntime runtime, ConversationHistory memory) {
-        this.brain = brain;
+    public FastAIAgent(FastAIBot bot, FastAIRuntime runtime) {
+        this.bot = bot;
         this.runtime = runtime;
-        this.memory = memory;
     }
 
     public void run(String goal) {
@@ -39,23 +37,21 @@ public final class FastAIAgent {
             toolsDef.append("- ").append(tool.name()).append("\n");
         }
 
-        String planPrompt = "You are a planner. Convert this goal: '" + goal + "' into structured tool call commands.\n" +
+        String planPrompt = "You are a fast AI Agent. Convert this goal: '" + goal + "' into a single structured tool call.\n" +
                             "Available tools:\n" +
                             toolsDef.toString() +
                             "For file saving, use: file.save|path=<file_path>,content=<text_to_save>\n" +
                             "For typing, use: keyboard.type|text=<text_to_type>\n" +
                             "For opening apps, use: windows.open_app|path=<executable_path>\n" +
-                            "Provide your step-by-step thinking inside <thoughts></thoughts> blocks first, then output the final tool calls.\n" +
-                            "Final Tool Call Output format: tool_name|arg_key=arg_value. Example:\n" +
-                            "file.save|path=target/reasoning_output.txt,content=Executed multi-step logic successfully.";
+                            "Always answer with the precise tool call in plain text (do NOT wrap it in markdown code blocks). Give no explanation.\n" +
+                            "Output format: tool_name|arg_key=arg_value. Example:\n" +
+                            "file.save|path=target/reasoning_output.txt,content=Executed successfully.";
         
-        String planRaw = brain.ask(planPrompt).trim();
-        String checkRaw = planRaw.toLowerCase()
-                                 .replace("\\u003cthoughts\\u003e", "<thoughts>")
-                                 .replace("\\u003c/thoughts\\u003e", "</thoughts>")
-                                 .replace("\u003cthoughts\u003e", "<thoughts>")
-                                 .replace("\u003c/thoughts\u003e", "</thoughts>");
+        // Clear previous response string builder conceptually (FastAIBot adds to its history)
+        bot.streamChat(planPrompt);
 
+        // Get the latest response from FastAIBot's internal history
+        String planRaw = bot.getHistory().messages().get(bot.getHistory().messages().size() - 1).text().trim();
         String normalizedRaw = planRaw.replace("\\u003cthoughts\\u003e", "<thoughts>")
                                        .replace("\\u003c/thoughts\\u003e", "</thoughts>")
                                        .replace("\u003cthoughts\u003e", "<thoughts>")
@@ -63,19 +59,20 @@ public final class FastAIAgent {
                                        .replace("\\u003cThoughts\\u003e", "<thoughts>")
                                        .replace("\\u003c/Thoughts\\u003e", "</thoughts>");
 
-        System.out.println(TN_HEADER + FastEmojis.THINKING + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL + " Thought Trace " + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_TOP_RIGHT + FastANSI.RESET);
         if (normalizedRaw.contains("<thoughts>") && normalizedRaw.contains("</thoughts>")) {
+            System.out.println(TN_HEADER + FastEmojis.THINKING + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL + " Thought Trace " + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_TOP_RIGHT + FastANSI.RESET);
             int start = normalizedRaw.indexOf("<thoughts>") + 10;
             int end = normalizedRaw.indexOf("</thoughts>");
             System.out.println(TN_THOUGHT + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
+            System.out.println(TN_HEADER + "   " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + FastANSI.RESET);
         } else if (normalizedRaw.toLowerCase().contains("<thoughts>") && normalizedRaw.toLowerCase().contains("</thoughts>")) {
+            System.out.println(TN_HEADER + FastEmojis.THINKING + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL + " Thought Trace " + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_TOP_RIGHT + FastANSI.RESET);
             int start = normalizedRaw.toLowerCase().indexOf("<thoughts>") + 10;
             int end = normalizedRaw.toLowerCase().indexOf("</thoughts>");
             System.out.println(TN_THOUGHT + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
-        } else {
-            System.out.println(TN_THOUGHT + normalizedRaw + FastANSI.RESET);
+            System.out.println(TN_HEADER + "   " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + FastANSI.RESET);
         }
-        System.out.println(TN_HEADER + "   " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + FastANSI.RESET);
+        // If there's no thought trace, we just silently skip rendering the box.
 
         // Parse generated command (extract last line or clean tool call format)
         String planLine = normalizedRaw;
@@ -149,8 +146,9 @@ public final class FastAIAgent {
                     // 3. Observe
                     String icon = obs.success() ? FastEmojis.CHECK : FastEmojis.ERROR_RED;
                     System.out.println(TN_OBS + "   " + icon + "  " + obs.message() + FastANSI.RESET);
-                    memory.user(goal);
-                    memory.assistant(obs.message());
+                    // Remove manual tracking, FastAIBot already holds context!
+                    // Let's just output the observation.
+                    bot.getHistory().user("Tool Execution Result (" + toolName + "): " + obs.message());
                 }
             }
         }

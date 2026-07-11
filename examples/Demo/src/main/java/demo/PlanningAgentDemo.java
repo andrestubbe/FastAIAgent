@@ -1,12 +1,15 @@
-package demo.chapters.chapter05;
+package demo;
 
 import fastai.AI;
 import fastai.FastAI;
 import fastaiagent.FastAIAgent;
-import fastaimemory.ConversationHistory;
+import fastaibot.FastAIBot;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.tools.KeyboardTypeTool;
 import fastairuntime.tools.WindowsAppTool;
+import fastterminal.FastTerminal;
+
+import java.util.function.Consumer;
 
 /**
  * Demo referencing Chapter 5: Foundational Cognitive Architectures
@@ -15,7 +18,10 @@ import fastairuntime.tools.WindowsAppTool;
 public final class PlanningAgentDemo {
 
     public static void main(String[] args) {
-        try { fastterminal.FastTerminal.setAnsiRawMode(true); } catch (Throwable ignored) {}
+        try {
+            FastTerminal.setAnsiRawMode(true);
+        } catch (Throwable ignored) {
+        }
         System.out.println("=== Running Planning Agent Demo ===");
 
         FastAIRuntime runtime = new FastAIRuntime();
@@ -23,9 +29,9 @@ public final class PlanningAgentDemo {
         runtime.register(new KeyboardTypeTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
-        ConversationHistory memory = new ConversationHistory();
-
-        FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
+        Consumer<String> out = System.out::print;
+        FastAIBot bot = new FastAIBot(brain, "", out, out);
+        FastAIAgent agent = new FastAIAgent(bot, runtime);
         agent.run("Start application notepad.exe");
     }
 }
