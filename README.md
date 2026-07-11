@@ -74,6 +74,10 @@ Add JitPack repository and dependency to your `pom.xml`:
 - [FastAIRuntime](https://github.com/andrestubbe/FastAIRuntime) - Deterministic execution engine
 - [FastAI](https://github.com/andrestubbe/FastAI) - Unified AI client interface for Java
 - [FastAIMemory](https://github.com/andrestubbe/FastAIMemory) - Unified conversation memory
+- [FastAIVectorDB](https://github.com/andrestubbe/FastAIVectorDB) - JNI native vector database
+- [FastAIRag](https://github.com/andrestubbe/FastAIRag) - Retrieval-augmented generation pipeline
+- [FastAIBot](https://github.com/andrestubbe/FastAIBot) - High-performance bot orchestrator
+- [FastCore](https://github.com/andrestubbe/FastCore) - Unified JNI loader and platform abstraction
 
 ---
 
