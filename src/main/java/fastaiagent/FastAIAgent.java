@@ -36,8 +36,8 @@ public final class FastAIAgent {
                             "Final Tool Call Output format: tool_name|arg_key=arg_value. Example: windows.open_app|path=notepad.exe";
         
         String planRaw = brain.ask(planPrompt).trim();
-        // Normalise unicode escaped tags if returned in raw streams
-        String cleanRaw = planRaw.replace("\\u003cthoughts\\u003e", "<thoughts>")
+        String cleanRaw = planRaw.toLowerCase()
+                                 .replace("\\u003cthoughts\\u003e", "<thoughts>")
                                  .replace("\\u003c/thoughts\\u003e", "</thoughts>")
                                  .replace("\u003cthoughts\u003e", "<thoughts>")
                                  .replace("\u003c/thoughts\u003e", "</thoughts>");
@@ -55,19 +55,26 @@ public final class FastAIAgent {
         // Parse generated command (extract last line or clean tool call format)
         String planLine = cleanRaw;
         if (cleanRaw.contains("</thoughts>")) {
-            planLine = cleanRaw.substring(cleanRaw.indexOf("</thoughts>") + 11).trim();
+            planLine = planRaw.substring(cleanRaw.indexOf("</thoughts>") + 11).trim();
         }
         System.out.println("Extracted Command: " + planLine);
 
         // Parse generated command
         String[] parts = planLine.split("\\|");
         if (parts.length == 2) {
-            String toolName = parts[0];
-            String[] argParts = parts[1].split("=");
-            if (argParts.length == 2) {
-                Map<String, Object> args = new HashMap<>();
-                args.put(argParts[0], argParts[1]);
+            String toolName = parts[0].trim();
+            Map<String, Object> args = new HashMap<>();
+            
+            // Handle multiple comma separated arguments: arg1=val1,arg2=val2
+            String[] argPairs = parts[1].split(",");
+            for (String pair : argPairs) {
+                String[] kv = pair.split("=");
+                if (kv.length == 2) {
+                    args.put(kv[0].trim(), kv[1].trim());
+                }
+            }
 
+            if (!args.isEmpty()) {
                 // 2. Act
                 FastCommand cmd = new FastCommand(toolName, args);
                 FastObservation obs = runtime.execute(cmd);
