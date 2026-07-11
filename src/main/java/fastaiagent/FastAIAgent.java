@@ -5,6 +5,7 @@ import fastaimemory.ConversationHistory;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.FastCommand;
 import fastairuntime.FastObservation;
+import fastansi.FastANSI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,19 +51,19 @@ public final class FastAIAgent {
                                        .replace("\\u003cThoughts\\u003e", "<thoughts>")
                                        .replace("\\u003c/Thoughts\\u003e", "</thoughts>");
 
-        System.out.println("--- Planner Thought Trace ---");
+        System.out.println(FastANSI.FG_CYAN + "--- Planner Thought Trace ---" + FastANSI.RESET);
         if (normalizedRaw.contains("<thoughts>") && normalizedRaw.contains("</thoughts>")) {
             int start = normalizedRaw.indexOf("<thoughts>") + 10;
             int end = normalizedRaw.indexOf("</thoughts>");
-            System.out.println(normalizedRaw.substring(start, end).trim());
+            System.out.println(FastANSI.FG_BRIGHT_BLACK + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
         } else if (normalizedRaw.toLowerCase().contains("<thoughts>") && normalizedRaw.toLowerCase().contains("</thoughts>")) {
             int start = normalizedRaw.toLowerCase().indexOf("<thoughts>") + 10;
             int end = normalizedRaw.toLowerCase().indexOf("</thoughts>");
-            System.out.println(normalizedRaw.substring(start, end).trim());
+            System.out.println(FastANSI.FG_BRIGHT_BLACK + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
         } else {
-            System.out.println(normalizedRaw);
+            System.out.println(FastANSI.FG_BRIGHT_BLACK + normalizedRaw + FastANSI.RESET);
         }
-        System.out.println("-----------------------------");
+        System.out.println(FastANSI.FG_CYAN + "-----------------------------" + FastANSI.RESET);
 
         // Parse generated command (extract last line or clean tool call format)
         String planLine = normalizedRaw;
@@ -80,7 +81,7 @@ public final class FastAIAgent {
                            .replace("`", "")
                            .trim();
                            
-        System.out.println("Extracted Command: " + planLine);
+        System.out.println(FastANSI.FG_GREEN + "Extracted Command: " + planLine + FastANSI.RESET);
 
         // Parse generated command
         String[] parts = planLine.split("\\|");
