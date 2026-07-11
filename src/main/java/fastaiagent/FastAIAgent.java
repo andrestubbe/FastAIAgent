@@ -24,10 +24,14 @@ public final class FastAIAgent {
         System.out.println("Agent Goal: " + goal);
         
         // 1. Plan
+        StringBuilder toolsDef = new StringBuilder();
+        for (fastairuntime.FastTool tool : runtime.getRegisteredTools()) {
+            toolsDef.append("- ").append(tool.name()).append("\n");
+        }
+
         String planPrompt = "You are a planner. Convert this goal: '" + goal + "' into a structured tool call command.\n" +
                             "Available tools:\n" +
-                            "- windows.open_app (args: path)\n" +
-                            "- keyboard.type (args: text)\n" +
+                            toolsDef.toString() +
                             "Provide your step-by-step thinking inside <thoughts></thoughts> blocks first, then output the final tool call.\n" +
                             "Final Tool Call Output format: tool_name|arg_key=arg_value. Example: windows.open_app|path=notepad.exe";
         
