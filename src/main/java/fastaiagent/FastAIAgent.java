@@ -30,12 +30,15 @@ public final class FastAIAgent {
             toolsDef.append("- ").append(tool.name()).append("\n");
         }
 
-        String planPrompt = "You are a planner. Convert this goal: '" + goal + "' into a structured tool call command.\n" +
+        String planPrompt = "You are a planner. Convert this goal: '" + goal + "' into structured tool call commands.\n" +
                             "Available tools:\n" +
                             toolsDef.toString() +
-                            "Provide your step-by-step thinking inside <thoughts></thoughts> blocks first, then output the final tool call.\n" +
-                            "Do not wrap the final tool call in any code blocks or custom tags like <tool_call>.\n" +
-                            "Final Tool Call Output format: tool_name|arg_key=arg_value. Example: windows.open_app|path=notepad.exe";
+                            "For file saving, use: file.save|path=<file_path>,content=<text_to_save>\n" +
+                            "For typing, use: keyboard.type|text=<text_to_type>\n" +
+                            "For opening apps, use: windows.open_app|path=<executable_path>\n" +
+                            "Provide your step-by-step thinking inside <thoughts></thoughts> blocks first, then output the final tool calls.\n" +
+                            "Final Tool Call Output format: tool_name|arg_key=arg_value. Example:\n" +
+                            "file.save|path=target/reasoning_output.txt,content=Executed multi-step logic successfully.";
         
         String planRaw = brain.ask(planPrompt).trim();
         String checkRaw = planRaw.toLowerCase()
