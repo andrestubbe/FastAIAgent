@@ -36,26 +36,39 @@ public final class FastAIAgent {
                             "Final Tool Call Output format: tool_name|arg_key=arg_value. Example: windows.open_app|path=notepad.exe";
         
         String planRaw = brain.ask(planPrompt).trim();
-        String cleanRaw = planRaw.toLowerCase()
+        String checkRaw = planRaw.toLowerCase()
                                  .replace("\\u003cthoughts\\u003e", "<thoughts>")
                                  .replace("\\u003c/thoughts\\u003e", "</thoughts>")
                                  .replace("\u003cthoughts\u003e", "<thoughts>")
                                  .replace("\u003c/thoughts\u003e", "</thoughts>");
 
+        String normalizedRaw = planRaw.replace("\\u003cthoughts\\u003e", "<thoughts>")
+                                       .replace("\\u003c/thoughts\\u003e", "</thoughts>")
+                                       .replace("\u003cthoughts\u003e", "<thoughts>")
+                                       .replace("\u003c/thoughts\u003e", "</thoughts>")
+                                       .replace("\\u003cThoughts\\u003e", "<thoughts>")
+                                       .replace("\\u003c/Thoughts\\u003e", "</thoughts>");
+
         System.out.println("--- Planner Thought Trace ---");
-        if (cleanRaw.contains("<thoughts>") && cleanRaw.contains("</thoughts>")) {
-            int start = cleanRaw.indexOf("<thoughts>") + 10;
-            int end = cleanRaw.indexOf("</thoughts>");
-            System.out.println(cleanRaw.substring(start, end).trim());
+        if (normalizedRaw.contains("<thoughts>") && normalizedRaw.contains("</thoughts>")) {
+            int start = normalizedRaw.indexOf("<thoughts>") + 10;
+            int end = normalizedRaw.indexOf("</thoughts>");
+            System.out.println(normalizedRaw.substring(start, end).trim());
+        } else if (normalizedRaw.toLowerCase().contains("<thoughts>") && normalizedRaw.toLowerCase().contains("</thoughts>")) {
+            int start = normalizedRaw.toLowerCase().indexOf("<thoughts>") + 10;
+            int end = normalizedRaw.toLowerCase().indexOf("</thoughts>");
+            System.out.println(normalizedRaw.substring(start, end).trim());
         } else {
-            System.out.println(cleanRaw);
+            System.out.println(normalizedRaw);
         }
         System.out.println("-----------------------------");
 
         // Parse generated command (extract last line or clean tool call format)
-        String planLine = cleanRaw;
-        if (cleanRaw.contains("</thoughts>")) {
-            planLine = planRaw.substring(cleanRaw.indexOf("</thoughts>") + 11).trim();
+        String planLine = normalizedRaw;
+        if (normalizedRaw.contains("</thoughts>")) {
+            planLine = normalizedRaw.substring(normalizedRaw.indexOf("</thoughts>") + 11).trim();
+        } else if (normalizedRaw.toLowerCase().contains("</thoughts>")) {
+            planLine = normalizedRaw.substring(normalizedRaw.toLowerCase().indexOf("</thoughts>") + 11).trim();
         }
         System.out.println("Extracted Command: " + planLine);
 
