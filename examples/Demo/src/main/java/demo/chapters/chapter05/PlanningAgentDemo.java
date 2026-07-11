@@ -5,30 +5,27 @@ import fastai.FastAI;
 import fastaiagent.FastAIAgent;
 import fastaimemory.ConversationHistory;
 import fastairuntime.FastAIRuntime;
-import fastairuntime.tools.FileSaveTool;
 import fastairuntime.tools.KeyboardTypeTool;
 import fastairuntime.tools.WindowsAppTool;
 
 /**
  * Demo referencing Chapter 5: Foundational Cognitive Architectures
  * Source Concept: "30 Agents Every AI Engineer Must Build" (Packt Publishing)
- * Feature: The Multi-Step Reasoning Agent (reasoning over complex compound goals).
  */
-public final class MultiStepReasoningAgentDemo {
+public final class PlanningAgentDemo {
 
     public static void main(String[] args) {
-        System.out.println("=== Running Multi-Step Reasoning Agent Demo ===");
+        try { fastterminal.FastTerminal.setAnsiRawMode(true); } catch (Throwable ignored) {}
+        System.out.println("=== Running Planning Agent Demo ===");
 
         FastAIRuntime runtime = new FastAIRuntime();
         runtime.register(new WindowsAppTool());
         runtime.register(new KeyboardTypeTool());
-        runtime.register(new FileSaveTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
         ConversationHistory memory = new ConversationHistory();
-        FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
 
-        // Execute complex compound workflow
-        agent.run("Create a local text file at target/reasoning_output.txt with content 'Executed multi-step logic successfully.'");
+        FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
+        agent.run("Start application notepad.exe");
     }
 }

@@ -5,36 +5,36 @@ import fastai.FastAI;
 import fastaiagent.FastAIAgent;
 import fastaimemory.ConversationHistory;
 import fastairuntime.FastAIRuntime;
-import fastairuntime.tools.FileSaveTool;
 import fastairuntime.tools.KeyboardTypeTool;
 import fastairuntime.tools.WindowsAppTool;
 
 /**
  * Demo referencing Chapter 5: Foundational Cognitive Architectures
  * Source Concept: "30 Agents Every AI Engineer Must Build" (Packt Publishing)
- * Feature: The Calculation Protocol Agent (opens calc, performs operation, logs result).
+ * Feature: The Memory-Augmented Agent maintaining context across multiple steps.
  */
-public final class CalculationProtocolAgentDemo {
+public final class MemoryAugmentedAgentDemo {
 
     public static void main(String[] args) {
-        System.out.println("=== Running Calculation Protocol Agent Demo ===");
+        try { fastterminal.FastTerminal.setAnsiRawMode(true); } catch (Throwable ignored) {}
+        System.out.println("=== Running Memory-Augmented Agent Demo ===");
 
         FastAIRuntime runtime = new FastAIRuntime();
         runtime.register(new WindowsAppTool());
         runtime.register(new KeyboardTypeTool());
-        runtime.register(new FileSaveTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
+        
+        // Dynamic memory state tracker
         ConversationHistory memory = new ConversationHistory();
         FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
 
-        // Step 1: Open Calculator
-        agent.run("Open the Windows Calculator application located at calc.exe");
+        // Sequence Step 1
+        System.out.println("\n--- STEP 1 ---");
+        agent.run("Start application notepad.exe");
 
-        // Step 2: Type the calculation
-        agent.run("Type the text '42*7=' using the keyboard");
-
-        // Step 3: Log the result to a file
-        agent.run("Save a calculation protocol to target/calculation_log.txt with content 'Calculation: 42 * 7 = 294'");
+        // Sequence Step 2 (requires memory of the open app context)
+        System.out.println("\n--- STEP 2 ---");
+        agent.run("Type 'Hello from Memory-Augmented Agent!' inside the open window.");
     }
 }
