@@ -83,30 +83,37 @@ public final class FastAIAgent {
                            
         System.out.println(FastANSI.FG_GREEN + "Extracted Command: " + planLine + FastANSI.RESET);
 
-        // Parse generated command
-        String[] parts = planLine.split("\\|");
-        if (parts.length == 2) {
-            String toolName = parts[0].trim();
-            Map<String, Object> args = new HashMap<>();
+        // Parse generated command(s) line-by-line for multi-step execution
+        String[] lines = planLine.split("\n");
+        for (String line : lines) {
+            String cleanLine = line.trim();
+            if (cleanLine.isEmpty()) continue;
             
-            // Handle multiple comma separated arguments: arg1=val1,arg2=val2
-            String[] argPairs = parts[1].split(",");
-            for (String pair : argPairs) {
-                String[] kv = pair.split("=");
-                if (kv.length == 2) {
-                    args.put(kv[0].trim(), kv[1].trim());
+            String[] parts = cleanLine.split("\\|");
+            if (parts.length == 2) {
+                String toolName = parts[0].trim();
+                Map<String, Object> args = new HashMap<>();
+                
+                // Handle multiple comma separated arguments: arg1=val1,arg2=val2
+                String[] argPairs = parts[1].split(",");
+                for (String pair : argPairs) {
+                    String[] kv = pair.split("=");
+                    if (kv.length == 2) {
+                        args.put(kv[0].trim(), kv[1].trim());
+                    }
                 }
-            }
 
-            if (!args.isEmpty()) {
-                // 2. Act
-                FastCommand cmd = new FastCommand(toolName, args);
-                FastObservation obs = runtime.execute(cmd);
+                if (!args.isEmpty()) {
+                    System.out.println("Executing command step: " + toolName + " with " + args);
+                    // 2. Act
+                    FastCommand cmd = new FastCommand(toolName, args);
+                    FastObservation obs = runtime.execute(cmd);
 
-                // 3. Observe
-                System.out.println("Execution Observation: success=" + obs.success() + ", msg=" + obs.message());
-                memory.user(goal);
-                memory.assistant(obs.message());
+                    // 3. Observe
+                    System.out.println("Step Observation: success=" + obs.success() + ", msg=" + obs.message());
+                    memory.user(goal);
+                    memory.assistant(obs.message());
+                }
             }
         }
     }
