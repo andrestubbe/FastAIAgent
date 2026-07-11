@@ -21,7 +21,7 @@ public final class PlanningAgentDemo {
         runtime.register(new WindowsAppTool());
         runtime.register(new KeyboardTypeTool());
 
-        AI brain = FastAI.connect("ollama:llama3.2:3b");
+        AI brain = FastAI.connect("ollama:qwen2.5:3b");
         ConversationHistory memory = new ConversationHistory();
 
         FastAIAgent agent = new FastAIAgent(brain, runtime, memory);

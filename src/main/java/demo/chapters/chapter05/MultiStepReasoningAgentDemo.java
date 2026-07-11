@@ -24,7 +24,7 @@ public final class MultiStepReasoningAgentDemo {
         runtime.register(new KeyboardTypeTool());
         runtime.register(new FileSaveTool());
 
-        AI brain = FastAI.connect("ollama:llama3.2:3b");
+        AI brain = FastAI.connect("ollama:qwen2.5:3b");
         ConversationHistory memory = new ConversationHistory();
         FastAIAgent agent = new FastAIAgent(brain, runtime, memory);
 

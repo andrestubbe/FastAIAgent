@@ -22,7 +22,7 @@ public final class MemoryAugmentedAgentDemo {
         runtime.register(new WindowsAppTool());
         runtime.register(new KeyboardTypeTool());
 
-        AI brain = FastAI.connect("ollama:llama3.2:3b");
+        AI brain = FastAI.connect("ollama:qwen2.5:3b");
         
         // Dynamic memory state tracker
         ConversationHistory memory = new ConversationHistory();
