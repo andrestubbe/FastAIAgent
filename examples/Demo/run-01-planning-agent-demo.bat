@@ -1,4 +1,3 @@
-@echo off
-set /p GEMINI_API_KEY=<C:\Users\andre\Documents\GEMINI_API_KEY.txt
+﻿@echo off
+chcp 65001 >nul
 call mvn compile exec:java -D"exec.mainClass"="demo.PlanningAgentDemo" -q
-pause

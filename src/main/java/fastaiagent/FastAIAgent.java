@@ -4,6 +4,7 @@ import fastaibot.FastAIBot;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.FastCommand;
 import fastairuntime.FastObservation;
+import fastairuntime.FastTool;
 import fastansi.FastANSI;
 import fastemojis.FastEmojis;
 
@@ -12,144 +13,156 @@ import java.util.Map;
 
 public final class FastAIAgent {
 
-    // Color palette — blues & yellows
-    private static final String TN_GOAL    = FastANSI.fg(255, 215,   0); // vivid gold
-    private static final String TN_HEADER  = FastANSI.fg(122, 162, 247); // bright blue  #7aa2f7
-    private static final String TN_THOUGHT = FastANSI.fg(125, 207, 255); // sky blue     #7dcfff
-    private static final String TN_CMD     = FastANSI.fg(255, 158, 100); // amber orange #ff9e64
-    private static final String TN_STEP    = FastANSI.fg(224, 175, 104); // warm gold    #e0af68
-    private static final String TN_OBS     = FastANSI.fg(137, 221, 255); // ice blue     #89ddff
+    // 🎨 Tokyo Night Full Palette (v2)
+    private static final String TN_BG_DARK    = FastANSI.bg(26, 27, 38);   // #1a1b26
+    private static final String TN_BG_DARKER  = FastANSI.bg(22, 22, 30);   // #16161e
+    private static final String TN_BG_SIDE    = FastANSI.bg(31, 35, 53);   // #1f2335
+    private static final String TN_BG_HL      = FastANSI.bg(47, 51, 77);   // #2f334d
+    private static final String TN_BG_ERROR   = FastANSI.bg(247, 118, 142); // #f7768e (Error Invert)
+
+    private static final String TN_FG         = FastANSI.fg(192, 202, 245); // #c0caf5
+    private static final String TN_FG_DIM     = FastANSI.fg(169, 177, 214); // #a9b1d6
+    private static final String TN_FG_DARK    = FastANSI.fg(86, 95, 137);   // #565f89
+    private static final String TN_FG_BLACK   = FastANSI.fg(0, 0, 0);       // For inverted error
+
+    private static final String TN_GOAL   = FastANSI.fg(255, 215, 0);   // Gold
+    private static final String TN_HEADER = FastANSI.fg(122, 162, 247); // Blue
+    private static final String TN_THOUGHT= FastANSI.fg(125, 207, 255); // Sky
+    private static final String TN_CMD    = FastANSI.fg(255, 158, 100); // Orange
+    private static final String TN_STEP   = FastANSI.fg(158, 206, 106); // Green (Active step)
+    private static final String TN_OBS    = FastANSI.fg(180, 252, 255); // Ice
 
     private final FastAIBot bot;
     private final FastAIRuntime runtime;
+    private long last = System.currentTimeMillis();
 
     public FastAIAgent(FastAIBot bot, FastAIRuntime runtime) {
         this.bot = bot;
         this.runtime = runtime;
     }
 
+    private String tick() {
+        long now = System.currentTimeMillis();
+        long delta = now - last;
+        last = now;
+        return String.format("[%5d ms] ", delta);
+    }
+
+    private static String normalize(String raw) {
+        if (raw == null) return "";
+        String s = raw.replace("\\u003c", "<").replace("\\u003e", ">");
+        s = s.replaceAll("(?i)<thoughts>", "<thoughts>").replaceAll("(?i)</thoughts>", "</thoughts>");
+        s = s.replaceAll("(?i)</?tool_call>", "").replaceAll("(?i)</?tool_name>", "");
+        return s.trim();
+    }
+
+    private static String extractThoughts(String normalized) {
+        int start = normalized.indexOf("<thoughts>");
+        int end   = normalized.indexOf("</thoughts>");
+        if (start < 0 || end < 0) return null;
+        return normalized.substring(start + 10, end).trim();
+    }
+
+    private static String extractCommandBlock(String normalized) {
+        int end = normalized.indexOf("</thoughts>");
+        if (end < 0) return normalized.trim();
+        return normalized.substring(end + 11).trim();
+    }
+
+    private ParsedCommand parseCommand(String block) {
+        String[] parts = block.split("\\|", 2);
+        if (parts.length != 2) return null;
+
+        String tool = parts[0].trim();
+        if (tool.startsWith("tool_call=")) {
+            tool = tool.substring(10).trim();
+        }
+        
+        String argsRaw = parts[1].trim();
+
+        Map<String, Object> args = new HashMap<>();
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("([a-zA-Z0-9_]+)=").matcher(argsRaw);
+        String currentKey = null;
+        int lastValStart = -1;
+        
+        while (m.find()) {
+            if (currentKey != null) {
+                String val = argsRaw.substring(lastValStart, m.start()).trim();
+                if (val.endsWith(",")) val = val.substring(0, val.length() - 1).trim();
+                if (val.endsWith("|")) val = val.substring(0, val.length() - 1).trim();
+                val = val.replaceAll("^['\"]|['\"]$", "");
+                args.put(currentKey, val);
+            }
+            currentKey = m.group(1);
+            lastValStart = m.end();
+        }
+        if (currentKey != null) {
+            String val = argsRaw.substring(lastValStart).trim();
+            if (val.endsWith("|raw")) val = val.substring(0, val.length() - 4).trim();
+            if (val.endsWith("|")) val = val.substring(0, val.length() - 1).trim();
+            val = val.replaceAll("^['\"]|['\"]$", "");
+            args.put(currentKey, val);
+        }
+
+        return new ParsedCommand(tool, args);
+    }
+
+    private record ParsedCommand(String tool, Map<String,Object> args) {}
+
+    // --- V2 Rendering Helpers ---
+
+    private void printNoiseLine() {
+        System.out.println(TN_BG_DARKER + TN_FG_DARK + "  " + FastEmojis.BOX_HORIZONTAL.repeat(60) + FastANSI.RESET);
+    }
+
+    private void printPanelFrame(String title, String content, String colorBg, String colorFg) {
+        System.out.println(colorBg + colorFg + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL.repeat(2) + " " + title + " " + FastEmojis.BOX_HORIZONTAL.repeat(40 - title.length()) + FastEmojis.BOX_ROUND_TOP_RIGHT + "  " + FastANSI.RESET);
+        for (String line : content.split("\n")) {
+            System.out.println(colorBg + colorFg + "  " + FastEmojis.BOX_VERTICAL + " " + String.format("%-44s", line) + FastEmojis.BOX_VERTICAL + "  " + FastANSI.RESET);
+        }
+        System.out.println(colorBg + colorFg + "  " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL.repeat(44) + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + "  " + FastANSI.RESET);
+    }
+
     public void run(String goal) {
-        System.out.println(TN_GOAL + FastEmojis.ROBOT + "  Goal: " + goal + FastANSI.RESET);
-        
-        // 1. Plan
-        StringBuilder toolsDef = new StringBuilder();
-        for (fastairuntime.FastTool tool : runtime.getRegisteredTools()) {
-            toolsDef.append("- ").append(tool.name()).append("\n");
+
+        System.out.println("\n" + TN_BG_DARKER + TN_GOAL + FastEmojis.ROBOT + "  Goal: " + goal + " ".repeat(Math.max(0, 60 - goal.length())) + FastANSI.RESET);
+        printNoiseLine();
+
+        bot.streamChat(goal);
+
+        String raw = bot.getHistory().messages().getLast().text().trim();
+        String normalized = normalize(raw);
+
+        // Thought trace Panel
+        String thoughts = extractThoughts(normalized);
+        if (thoughts != null) {
+            printPanelFrame("Thought Trace", thoughts, TN_BG_SIDE, TN_THOUGHT);
         }
 
-        String planPrompt = "You are a fast AI Agent. Convert this goal: '" + goal + "' into a single structured tool call.\n" +
-                            "Available tools:\n" +
-                            toolsDef.toString() +
-                            "For file saving, use: file.save|path=<file_path>,content=<text_to_save>\n" +
-                            "For typing, use: keyboard.type|text=<text_to_type>\n" +
-                            "For opening apps, use: windows.open_app|path=<executable_path>\n" +
-                            "Always answer with the precise tool call in plain text (do NOT wrap it in markdown code blocks). Give no explanation.\n" +
-                            "Output format: tool_name|arg_key=arg_value. Example:\n" +
-                            "file.save|path=target/reasoning_output.txt,content=Executed successfully.";
-        
-        // Clear previous response string builder conceptually (FastAIBot adds to its history)
-        bot.streamChat(planPrompt);
+        // Command Highlight Step
+        String cmdBlock = extractCommandBlock(normalized);
+        System.out.println(tick() + TN_BG_HL + TN_CMD + FastEmojis.LIGHTNING + "  COMMAND: " + String.format("%-46s", cmdBlock) + FastANSI.RESET);
 
-        // Get the latest response from FastAIBot's internal history
-        String planRaw = bot.getHistory().messages().get(bot.getHistory().messages().size() - 1).text().trim();
-        String normalizedRaw = planRaw.replace("\\u003cthoughts\\u003e", "<thoughts>")
-                                       .replace("\\u003c/thoughts\\u003e", "</thoughts>")
-                                       .replace("\u003cthoughts\u003e", "<thoughts>")
-                                       .replace("\u003c/thoughts\u003e", "</thoughts>")
-                                       .replace("\\u003cThoughts\\u003e", "<thoughts>")
-                                       .replace("\\u003c/Thoughts\\u003e", "</thoughts>");
+        ParsedCommand pc = parseCommand(cmdBlock);
+        if (pc != null) {
+            boolean valid = runtime.getRegisteredTools().stream().anyMatch(t -> t.name().equals(pc.tool()));
+            if (valid) {
+                // Active Step
+                System.out.println(tick() + TN_BG_DARK + TN_STEP + FastEmojis.GEAR + "  " + String.format("%-55s", pc.tool() + " " + pc.args()) + FastANSI.RESET);
 
-        if (normalizedRaw.contains("<thoughts>") && normalizedRaw.contains("</thoughts>")) {
-            System.out.println(TN_HEADER + FastEmojis.THINKING + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL + " Thought Trace " + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_TOP_RIGHT + FastANSI.RESET);
-            int start = normalizedRaw.indexOf("<thoughts>") + 10;
-            int end = normalizedRaw.indexOf("</thoughts>");
-            System.out.println(TN_THOUGHT + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
-            System.out.println(TN_HEADER + "   " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + FastANSI.RESET);
-        } else if (normalizedRaw.toLowerCase().contains("<thoughts>") && normalizedRaw.toLowerCase().contains("</thoughts>")) {
-            System.out.println(TN_HEADER + FastEmojis.THINKING + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL + " Thought Trace " + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_TOP_RIGHT + FastANSI.RESET);
-            int start = normalizedRaw.toLowerCase().indexOf("<thoughts>") + 10;
-            int end = normalizedRaw.toLowerCase().indexOf("</thoughts>");
-            System.out.println(TN_THOUGHT + normalizedRaw.substring(start, end).trim() + FastANSI.RESET);
-            System.out.println(TN_HEADER + "   " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_HORIZONTAL + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + FastANSI.RESET);
-        }
-        // If there's no thought trace, we just silently skip rendering the box.
+                FastCommand cmd = new FastCommand(pc.tool(), pc.args());
+                FastObservation obs = runtime.execute(cmd);
 
-        // Parse generated command (extract last line or clean tool call format)
-        String planLine = normalizedRaw;
-        if (normalizedRaw.contains("</thoughts>")) {
-            planLine = normalizedRaw.substring(normalizedRaw.indexOf("</thoughts>") + 11).trim();
-        } else if (normalizedRaw.toLowerCase().contains("</thoughts>")) {
-            planLine = normalizedRaw.substring(normalizedRaw.toLowerCase().indexOf("</thoughts>") + 11).trim();
-        }
-        
-        // Strip custom XML tags if model generated them
-        planLine = planLine.replace("<tool_call>", "")
-                           .replace("</tool_call>", "")
-                           .replace("<tool_name>", "")
-                           .replace("</tool_name>", "")
-                           .replace("\\u003ctool_call\\u003e", "")
-                           .replace("\\u003c/tool_call\\u003e", "")
-                           .replace("\\u003ctool_name\\u003e", "")
-                           .replace("\\u003c/tool_name\\u003e", "")
-                           .replace("`", "")
-                           .trim();
-                           
-        System.out.println(TN_CMD + FastEmojis.LIGHTNING + "  " + planLine + FastANSI.RESET);
-
-        // Parse generated command(s) line-by-line for multi-step execution
-        String[] lines = planLine.split("\n");
-        for (String line : lines) {
-            String cleanLine = line.trim();
-            if (cleanLine.isEmpty()) continue;
-            
-            String[] parts = cleanLine.split("\\|");
-            if (parts.length == 2) {
-                String toolName = parts[0].trim();
-                
-                // Whitelist verification: Only run if it matches a registered tool
-                boolean isValidTool = false;
-                for (fastairuntime.FastTool registeredTool : runtime.getRegisteredTools()) {
-                    if (registeredTool.name().equals(toolName)) {
-                        isValidTool = true;
-                        break;
-                    }
+                // Observation (Error-Invert or Dim Ice)
+                if (obs.success()) {
+                    System.out.println(tick() + TN_BG_DARKER + TN_OBS + FastEmojis.CHECK + "  " + String.format("%-55s", obs.message()) + FastANSI.RESET);
+                } else {
+                    // Error Invert Mode
+                    System.out.println(tick() + TN_BG_ERROR + TN_FG_BLACK + FastEmojis.ERROR_RED + "  ERROR: " + String.format("%-49s", obs.message()) + FastANSI.RESET);
                 }
                 
-                if (!isValidTool) {
-                    continue; // Skip thoughts or narrative generated by local models
-                }
-                
-                Map<String, Object> args = new HashMap<>();
-                
-                // Handle multiple comma separated arguments: arg1=val1,arg2=val2
-                // Split on | with limit 2 to preserve | in values
-                String argsRaw = cleanLine.split("\\|", 2)[1];
-                String[] argPairs = argsRaw.split(",");
-                for (String pair : argPairs) {
-                    // Split on first = only (values may contain = signs)
-                    String[] kv = pair.split("=", 2);
-                    if (kv.length == 2) {
-                        String key = kv[0].trim();
-                        String val = kv[1].trim()
-                                          .replaceAll("^\"|\"$", "")  // strip surrounding "
-                                          .replaceAll("^'|'$", "");   // strip surrounding '
-                        args.put(key, val);
-                    }
-                }
-
-                if (!args.isEmpty()) {
-                    System.out.println(TN_STEP + FastEmojis.GEAR + "  " + toolName + " " + args + FastANSI.RESET);
-                    // 2. Act
-                    FastCommand cmd = new FastCommand(toolName, args);
-                    FastObservation obs = runtime.execute(cmd);
-
-                    // 3. Observe
-                    String icon = obs.success() ? FastEmojis.CHECK : FastEmojis.ERROR_RED;
-                    System.out.println(TN_OBS + "   " + icon + "  " + obs.message() + FastANSI.RESET);
-                    // Remove manual tracking, FastAIBot already holds context!
-                    // Let's just output the observation.
-                    bot.getHistory().user("Tool Execution Result (" + toolName + "): " + obs.message());
-                }
+                printNoiseLine();
+                bot.getHistory().user("Tool Execution Result (" + pc.tool() + "): " + obs.message());
             }
         }
     }

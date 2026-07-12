@@ -3,6 +3,7 @@ package demo;
 import fastai.AI;
 import fastai.FastAI;
 import fastaiagent.FastAIAgent;
+import fastaiagent.FastAIPromptBuilder;
 import fastaibot.FastAIBot;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.tools.KeyboardTypeTool;
@@ -29,9 +30,13 @@ public final class PlanningAgentDemo {
         runtime.register(new KeyboardTypeTool());
 
         AI brain = FastAI.connect("ollama:qwen2.5:3b");
-        Consumer<String> out = System.out::print;
-        FastAIBot bot = new FastAIBot(brain, "", out, out);
+        Consumer<String> out = token -> {};
+        String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime);
+        FastAIBot bot = new FastAIBot(brain, systemPrompt, out, out);
         FastAIAgent agent = new FastAIAgent(bot, runtime);
+
         agent.run("Start application notepad.exe");
+
+        FastTerminal.setAnsiRawMode(false);
     }
 }
