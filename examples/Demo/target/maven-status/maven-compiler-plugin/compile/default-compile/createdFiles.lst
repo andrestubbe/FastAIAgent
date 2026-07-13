@@ -12,6 +12,7 @@ demo\ToolUsingAgentDemo.class
 demo\tools\ChartGenerationTool$SimpleObservation.class
 demo\tools\tui\FastTUIContext.class
 demo\CalculationProtocolAgentDemo.class
+demo\ExplainableAgentDemo.class
 demo\MultiAgentOrchestratorDemo$1$1.class
 demo\RecommendationAgentDemo.class
 demo\SmartHomeControllerDemo$1.class
@@ -31,6 +32,7 @@ demo\MemoryAugmentedAgentDemo.class
 demo\ConversationalAgentDemo$2$1.class
 demo\InteractiveAgentDemo$2$1.class
 demo\AgenticWorkflowDemo$2.class
+demo\ExplainableAgentDemo$1$1.class
 demo\TokyoNightLogger.class
 demo\AudioProcessingAgentDemo.class
 demo\ChartGenerationAgentDemo.class
@@ -60,6 +62,7 @@ demo\ConversationalAgentDemo$1.class
 demo\EthicalReasoningAgentDemo.class
 demo\MultiAgentOrchestratorDemo$2$1.class
 demo\SmartHomeControllerDemo.class
+demo\ExplainableAgentDemo$1.class
 demo\VerificationAgentDemo$1$1.class
 demo\VisionPerceptionAgentDemo$1$1.class
 demo\EthicalReasoningAgentDemo$1.class
