@@ -11,6 +11,7 @@ demo\tools\ChartGenerationTool$SimpleObservation.class
 demo\tools\tui\FastTUIContext.class
 demo\CalculationProtocolAgentDemo.class
 demo\MultiAgentOrchestratorDemo$1$1.class
+demo\RecommendationAgentDemo.class
 demo\SmartHomeControllerDemo$1.class
 demo\StatisticalAgentDemo.class
 demo\AgenticWorkflowDemo$2$1.class
@@ -33,8 +34,10 @@ demo\tools\DataAnalysisTool.class
 demo\TaskDecompositionAgentDemo.class
 demo\tools\DataAnalysisTool$SimpleObservation.class
 demo\tools\tui\TUIDrawTextTool$Obs.class
+demo\RecommendationAgentDemo$1$1.class
 demo\tools\tui\TUISetColorTool.class
 demo\SmartHomeControllerDemo$1$1.class
+demo\RecommendationAgentDemo$1.class
 demo\AgenticWorkflowDemo$1$1.class
 demo\AgenticWorkflowDemo.class
 demo\DocumentQAAgentDemo.class
