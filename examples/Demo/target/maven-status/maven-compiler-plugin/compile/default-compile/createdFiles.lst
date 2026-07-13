@@ -38,6 +38,7 @@ demo\RecommendationAgentDemo$1$1.class
 demo\tools\tui\TUISetColorTool.class
 demo\SmartHomeControllerDemo$1$1.class
 demo\RecommendationAgentDemo$1.class
+demo\VisionPerceptionAgentDemo$1$2.class
 demo\AgenticWorkflowDemo$1$1.class
 demo\AgenticWorkflowDemo.class
 demo\DocumentQAAgentDemo.class
@@ -45,11 +46,13 @@ demo\SmartHomeControllerDemo$1$2.class
 demo\SmartHomeControllerDemo$2.class
 demo\MultiAgentOrchestratorDemo.class
 demo\GeneralProblemSolverDemo.class
+demo\VisionPerceptionAgentDemo.class
 demo\InteractiveAgentDemo.class
 demo\ConversationalAgentDemo$1.class
 demo\MultiAgentOrchestratorDemo$2$1.class
 demo\SmartHomeControllerDemo.class
 demo\VerificationAgentDemo$1$1.class
+demo\VisionPerceptionAgentDemo$1$1.class
 demo\MultiAgentOrchestratorDemo$2.class
 demo\tools\RagSearchTool$SimpleObservation.class
 demo\tools\tui\TUIDrawBoxTool$Obs.class
@@ -58,6 +61,7 @@ demo\tools\tui\TUIDrawBoxTool.class
 demo\tools\tui\TUIClearTool.class
 demo\TuiBuilderAgentDemo.class
 demo\InteractiveAgentDemo$1$1.class
+demo\VisionPerceptionAgentDemo$1.class
 demo\UtilityClass.class
 demo\ConversationalAgentDemo$1$1.class
 demo\InteractiveAgentDemo$2.class
