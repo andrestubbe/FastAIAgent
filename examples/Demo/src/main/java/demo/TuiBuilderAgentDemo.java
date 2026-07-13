@@ -29,7 +29,7 @@ public final class TuiBuilderAgentDemo {
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Clear the TUI screen and set the color to Tokyo Night foreground (0xc0caf5) and background (0x1a1b26).");
         agent.run("Draw a panel with title 'System Info' and content 'Status: ONLINE\nAgent: Active\nCPU: 4%'");

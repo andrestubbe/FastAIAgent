@@ -1,4 +1,4 @@
-# FastAIAgent 0.1.0 — Cognitive Mind and Planning Layer for Java
+# FastAIAgent 0.1.5 — Cognitive Mind and Planning Layer for Java
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Java](https://img.shields.io/badge/Java-17+-blue.svg)](https://www.java.com)
@@ -63,7 +63,7 @@ Add JitPack repository and dependency to your `pom.xml`:
     <dependency>
         <groupId>com.github.andrestubbe</groupId>
         <artifactId>FastAIAgent</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.5</version>
     </dependency>
 </dependencies>
 ```

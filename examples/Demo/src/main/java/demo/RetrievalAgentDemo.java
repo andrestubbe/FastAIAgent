@@ -44,7 +44,7 @@ public final class RetrievalAgentDemo {
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         // 4. Execute Tasks
         agent.run("Search the knowledge base for 'vacation policy'.");

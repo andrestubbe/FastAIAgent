@@ -26,7 +26,7 @@ public final class StatisticalAgentDemo {
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Analyze the performance metrics '1.2, 1.4, 1.1, 1.3, 1.25' using the data analysis tool.");
         agent.run("Analyze the secondary performance metrics '0.8, 1.9, 0.5, 2.1, 1.0' using the data analysis tool.");

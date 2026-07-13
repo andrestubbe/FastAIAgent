@@ -33,7 +33,7 @@ public final class PlanningAgentDemo {
         Consumer<String> out = token -> {};
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime);
         FastAIBot bot = new FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Start application notepad.exe");
 

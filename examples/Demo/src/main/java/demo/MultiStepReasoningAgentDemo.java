@@ -34,7 +34,7 @@ public final class MultiStepReasoningAgentDemo {
         Consumer<String> out = token -> {};
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime);
         FastAIBot bot = new FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         // Execute complex compound workflow
         agent.run("Create a local text file at target/reasoning_output.txt with content 'Executed multi-step logic successfully.'");

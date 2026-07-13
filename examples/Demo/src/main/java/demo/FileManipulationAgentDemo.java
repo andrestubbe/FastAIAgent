@@ -26,7 +26,7 @@ public final class FileManipulationAgentDemo {
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime) + 
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("List the contents of the 'target' directory.");
         agent.run("Save a file named 'target/file_test.txt' with the content 'Hello File Manipulation Agent!'");

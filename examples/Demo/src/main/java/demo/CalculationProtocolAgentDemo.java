@@ -40,7 +40,7 @@ public final class CalculationProtocolAgentDemo {
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime) +
                 "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         FastAIBot bot = new FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         // Step 1: Open Calculator
         agent.run("Open the Windows Calculator application located at calc.exe");

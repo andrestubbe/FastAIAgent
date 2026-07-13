@@ -2,7 +2,7 @@ package demo.tools.tui;
 
 import fastairuntime.FastObservation;
 import fastairuntime.FastTool;
-import fasttui.component.Panel;
+import fasttui.component.Window;
 
 import java.util.Map;
 
@@ -34,10 +34,10 @@ public class TUIDrawPanelTool implements FastTool {
             String[] lines = content.split("\n");
             int height = lines.length + 4; // padding
 
-            Panel p = new Panel(2, nextY, 76, height, context.getBg());
+            Window p = new Window(2, nextY, 76, height, context.getBg());
             p.setTitle(title);
             p.setHasHeaderBar(true);
-            p.setFgColor(context.getFg());
+            p.setForegroundColor(context.getFg());
             p.setHeaderBg(context.getBg());
             p.setHeaderFg(context.getFg());
             p.setShowWindowButtons(false);

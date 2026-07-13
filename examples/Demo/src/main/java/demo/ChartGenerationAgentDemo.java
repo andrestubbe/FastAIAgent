@@ -26,7 +26,7 @@ public final class ChartGenerationAgentDemo {
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Generate an ASCII bar chart for the sales data '10, 45, 30, 80, 20'.");
         agent.run("Save the generated chart to 'target/sales_chart.txt' exactly as returned.");

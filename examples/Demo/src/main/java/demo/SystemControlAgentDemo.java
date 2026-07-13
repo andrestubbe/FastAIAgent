@@ -26,7 +26,7 @@ public final class SystemControlAgentDemo {
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime) + 
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Run the OS command 'ping 127.0.0.1 -n 2'.");
         agent.run("Open the Windows Calculator application (calc.exe).");

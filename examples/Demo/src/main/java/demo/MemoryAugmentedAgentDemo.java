@@ -29,7 +29,7 @@ public final class MemoryAugmentedAgentDemo {
         java.util.function.Consumer<String> out = token -> {};
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime);
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         // Sequence Step 1
         System.out.println("\n--- STEP 1 ---");

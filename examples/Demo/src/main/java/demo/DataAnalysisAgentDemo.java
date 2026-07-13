@@ -34,7 +34,7 @@ public final class DataAnalysisAgentDemo {
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Read the contents of 'target/sales_q1.txt'.");
         agent.run("Analyze the numerical data '1500.50, 2300.75, 1800.00, 3400.20, 2900.10' using the data analysis tool.");

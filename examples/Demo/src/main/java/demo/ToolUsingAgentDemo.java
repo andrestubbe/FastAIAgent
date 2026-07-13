@@ -30,7 +30,7 @@ public final class ToolUsingAgentDemo {
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime) + 
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Run the OS command 'echo Hello Tool World'.");
         agent.run("Save a file 'target/tool_selection.txt' with the content 'Selected the correct tool'.");

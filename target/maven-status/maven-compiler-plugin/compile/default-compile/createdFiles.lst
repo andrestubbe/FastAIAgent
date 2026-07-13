@@ -1,3 +1,5 @@
 fastaiagent\FastAIPromptBuilder.class
+fastaiagent\AgentLogger.class
 fastaiagent\FastAIAgent$ParsedCommand.class
 fastaiagent\FastAIAgent.class
+fastaiagent\FastAIAgent$1.class

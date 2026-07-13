@@ -4,48 +4,36 @@ import fastaibot.FastAIBot;
 import fastairuntime.FastAIRuntime;
 import fastairuntime.FastCommand;
 import fastairuntime.FastObservation;
-import fastairuntime.FastTool;
-import fastansi.FastANSI;
-import fastemojis.FastEmojis;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class FastAIAgent {
 
-    // 🎨 Tokyo Night Full Palette (v2)
-    private static final String TN_BG_DARK    = FastANSI.bg(26, 27, 38);   // #1a1b26
-    private static final String TN_BG_DARKER  = FastANSI.bg(22, 22, 30);   // #16161e
-    private static final String TN_BG_SIDE    = FastANSI.bg(31, 35, 53);   // #1f2335
-    private static final String TN_BG_HL      = FastANSI.bg(47, 51, 77);   // #2f334d
-    private static final String TN_BG_ERROR   = FastANSI.bg(247, 118, 142); // #f7768e (Error Invert)
-
-    private static final String TN_FG         = FastANSI.fg(192, 202, 245); // #c0caf5
-    private static final String TN_FG_DIM     = FastANSI.fg(169, 177, 214); // #a9b1d6
-    private static final String TN_FG_DARK    = FastANSI.fg(86, 95, 137);   // #565f89
-    private static final String TN_FG_BLACK   = FastANSI.fg(0, 0, 0);       // For inverted error
-
-    private static final String TN_GOAL   = FastANSI.fg(255, 215, 0);   // Gold
-    private static final String TN_HEADER = FastANSI.fg(122, 162, 247); // Blue
-    private static final String TN_THOUGHT= FastANSI.fg(125, 207, 255); // Sky
-    private static final String TN_CMD    = FastANSI.fg(255, 158, 100); // Orange
-    private static final String TN_STEP   = FastANSI.fg(158, 206, 106); // Green (Active step)
-    private static final String TN_OBS    = FastANSI.fg(180, 252, 255); // Ice
-
     private final FastAIBot bot;
     private final FastAIRuntime runtime;
-    private long last = System.currentTimeMillis();
+    private final AgentLogger logger;
+
+    private static final AgentLogger NO_OP_LOGGER = new AgentLogger() {
+        @Override public void onGoal(String goal) {}
+        @Override public void onThoughts(String thoughts) {}
+        @Override public void onCommand(String command) {}
+        @Override public void onActiveStep(String tool, Map<String, Object> args) {}
+        @Override public void onObservation(boolean success, String message) {}
+    };
 
     public FastAIAgent(FastAIBot bot, FastAIRuntime runtime) {
-        this.bot = bot;
-        this.runtime = runtime;
+        this(bot, runtime, NO_OP_LOGGER);
     }
 
-    private String tick() {
-        long now = System.currentTimeMillis();
-        long delta = now - last;
-        last = now;
-        return String.format("[%5d ms] ", delta);
+    public FastAIAgent(FastAIBot bot, FastAIRuntime runtime, AgentLogger logger) {
+        this.bot = bot;
+        this.runtime = runtime;
+        this.logger = logger != null ? logger : NO_OP_LOGGER;
     }
 
     private static String normalize(String raw) {
@@ -81,7 +69,7 @@ public final class FastAIAgent {
         String argsRaw = parts[1].trim();
 
         Map<String, Object> args = new HashMap<>();
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("([a-zA-Z0-9_]+)=").matcher(argsRaw);
+        Matcher m = Pattern.compile("([a-zA-Z0-9_]+)=").matcher(argsRaw);
         String currentKey = null;
         int lastValStart = -1;
         
@@ -91,7 +79,7 @@ public final class FastAIAgent {
                 if (val.endsWith(",")) val = val.substring(0, val.length() - 1).trim();
                 if (val.endsWith("|")) val = val.substring(0, val.length() - 1).trim();
                 val = val.replaceAll("^['\"]|['\"]$", "");
-                args.put(currentKey, val);
+                args.put(currentKey, decodeArg(val));
             }
             currentKey = m.group(1);
             lastValStart = m.end();
@@ -101,67 +89,49 @@ public final class FastAIAgent {
             if (val.endsWith("|raw")) val = val.substring(0, val.length() - 4).trim();
             if (val.endsWith("|")) val = val.substring(0, val.length() - 1).trim();
             val = val.replaceAll("^['\"]|['\"]$", "");
-            args.put(currentKey, val);
+            args.put(currentKey, decodeArg(val));
         }
 
         return new ParsedCommand(tool, args);
     }
 
+    private static String decodeArg(String val) {
+        try {
+            return URLDecoder.decode(val, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return val;
+        }
+    }
+
     private record ParsedCommand(String tool, Map<String,Object> args) {}
 
-    // --- V2 Rendering Helpers ---
-
-    private void printNoiseLine() {
-        System.out.println(TN_BG_DARKER + TN_FG_DARK + "  " + FastEmojis.BOX_HORIZONTAL.repeat(60) + FastANSI.RESET);
-    }
-
-    private void printPanelFrame(String title, String content, String colorBg, String colorFg) {
-        System.out.println(colorBg + colorFg + "  " + FastEmojis.BOX_ROUND_TOP_LEFT + FastEmojis.BOX_HORIZONTAL.repeat(2) + " " + title + " " + FastEmojis.BOX_HORIZONTAL.repeat(40 - title.length()) + FastEmojis.BOX_ROUND_TOP_RIGHT + "  " + FastANSI.RESET);
-        for (String line : content.split("\n")) {
-            System.out.println(colorBg + colorFg + "  " + FastEmojis.BOX_VERTICAL + " " + String.format("%-44s", line) + FastEmojis.BOX_VERTICAL + "  " + FastANSI.RESET);
-        }
-        System.out.println(colorBg + colorFg + "  " + FastEmojis.BOX_ROUND_BOTTOM_LEFT + FastEmojis.BOX_HORIZONTAL.repeat(44) + FastEmojis.BOX_ROUND_BOTTOM_RIGHT + "  " + FastANSI.RESET);
-    }
-
     public void run(String goal) {
-
-        System.out.println("\n" + TN_BG_DARKER + TN_GOAL + FastEmojis.ROBOT + "  Goal: " + goal + " ".repeat(Math.max(0, 60 - goal.length())) + FastANSI.RESET);
-        printNoiseLine();
+        logger.onGoal(goal);
 
         bot.streamChat(goal);
 
         String raw = bot.getHistory().messages().getLast().text().trim();
         String normalized = normalize(raw);
 
-        // Thought trace Panel
         String thoughts = extractThoughts(normalized);
         if (thoughts != null) {
-            printPanelFrame("Thought Trace", thoughts, TN_BG_SIDE, TN_THOUGHT);
+            logger.onThoughts(thoughts);
         }
 
-        // Command Highlight Step
         String cmdBlock = extractCommandBlock(normalized);
-        System.out.println(tick() + TN_BG_HL + TN_CMD + FastEmojis.LIGHTNING + "  COMMAND: " + String.format("%-46s", cmdBlock) + FastANSI.RESET);
+        logger.onCommand(cmdBlock);
 
         ParsedCommand pc = parseCommand(cmdBlock);
         if (pc != null) {
             boolean valid = runtime.getRegisteredTools().stream().anyMatch(t -> t.name().equals(pc.tool()));
             if (valid) {
-                // Active Step
-                System.out.println(tick() + TN_BG_DARK + TN_STEP + FastEmojis.GEAR + "  " + String.format("%-55s", pc.tool() + " " + pc.args()) + FastANSI.RESET);
+                logger.onActiveStep(pc.tool(), pc.args());
 
                 FastCommand cmd = new FastCommand(pc.tool(), pc.args());
                 FastObservation obs = runtime.execute(cmd);
 
-                // Observation (Error-Invert or Dim Ice)
-                if (obs.success()) {
-                    System.out.println(tick() + TN_BG_DARKER + TN_OBS + FastEmojis.CHECK + "  " + String.format("%-55s", obs.message()) + FastANSI.RESET);
-                } else {
-                    // Error Invert Mode
-                    System.out.println(tick() + TN_BG_ERROR + TN_FG_BLACK + FastEmojis.ERROR_RED + "  ERROR: " + String.format("%-49s", obs.message()) + FastANSI.RESET);
-                }
+                logger.onObservation(obs.success(), obs.message());
                 
-                printNoiseLine();
                 bot.getHistory().user("Tool Execution Result (" + pc.tool() + "): " + obs.message());
             }
         }

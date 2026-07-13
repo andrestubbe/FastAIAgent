@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
             <artifactId>FastAIAgent</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.5</version>
         </dependency>
         <dependency>
             <groupId>com.github.andrestubbe</groupId>

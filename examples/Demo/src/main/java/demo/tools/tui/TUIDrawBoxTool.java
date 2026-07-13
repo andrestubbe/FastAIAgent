@@ -2,7 +2,7 @@ package demo.tools.tui;
 
 import fastairuntime.FastObservation;
 import fastairuntime.FastTool;
-import fasttui.component.Panel;
+import fasttui.component.Window;
 
 import java.util.Map;
 
@@ -33,12 +33,12 @@ public class TUIDrawBoxTool implements FastTool {
             int h = args.containsKey("height") ? Integer.parseInt(String.valueOf(args.get("height"))) : 4;
             String title = args.containsKey("title") ? String.valueOf(args.get("title")) : (args.containsKey("label") ? String.valueOf(args.get("label")) : null);
 
-            Panel p = new Panel(x, y, w, h, context.getBg());
+            Window p = new Window(x, y, w, h, context.getBg());
             if (title != null) {
                 p.setTitle(title);
                 p.setHasHeaderBar(true);
             }
-            p.setFgColor(context.getFg());
+            p.setForegroundColor(context.getFg());
             p.setHeaderBg(context.getBg());
             p.setHeaderFg(context.getFg());
             p.setShowWindowButtons(false);

@@ -2,7 +2,6 @@ package demo.tools.tui;
 
 import fastterminal.FastTerminalScene;
 import fastterminal.FastTerminalRenderer;
-import fasttui.component.Panel;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -41,7 +41,7 @@ public final class SummarizationAgentDemo {
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Search the knowledge base for all updates regarding 'Project Alpha'.");
         agent.run("Save a brief summary of all three phases of Project Alpha to 'target/project_alpha_summary.txt'.");

@@ -24,7 +24,7 @@ public final class BrowserAutomationAgentDemo {
         String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime) + 
             "\nCRITICAL RULE: You must respond ONLY with the raw tool call. Do not add any thoughts, explanations, markdown, or greetings.";
         fastaibot.FastAIBot bot = new fastaibot.FastAIBot(brain, systemPrompt, out, out);
-        FastAIAgent agent = new FastAIAgent(bot, runtime);
+        FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
         agent.run("Fetch the content of 'https://example.com'.");
         agent.run("Save a summary indicating that the website was successfully fetched to 'target/browser_log.txt'.");
