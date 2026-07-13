@@ -40,11 +40,11 @@ public class FastAIPromptBuilder {
         if (hasClose) prompt.append("For closing apps, use: windows.close_app|process_name=<process_name>\n");
 
         prompt.append("Always answer with the precise tool call in plain text (do NOT wrap it in markdown code blocks). Give no explanation.\n");
-        prompt.append("Output format: tool_name|arg_key=arg_value. Example:\n");
+        prompt.append("Output format: tool_name|parameter=value. Example:\n");
         if (hasSave) {
             prompt.append("file.save|path=target/reasoning_output.txt,content=Executed successfully.");
         } else {
-            prompt.append("tool_name|arg_key=arg_value");
+            prompt.append("tool_name|parameter=value");
         }
 
         return prompt.toString();
