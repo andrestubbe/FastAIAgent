@@ -4,6 +4,7 @@ demo\tools\RagSearchTool.class
 demo\SummarizationAgentDemo.class
 demo\tools\tui\TUIDrawPanelTool$Obs.class
 demo\tools\tui\TUIDrawTextTool.class
+demo\HealthcareIntelligenceAgentDemo$1$1.class
 demo\AudioProcessingAgentDemo$1$1.class
 demo\ContentCreatorAgentDemo.class
 demo\ConversationalAgentDemo.class
@@ -30,6 +31,7 @@ demo\tools\ChartGenerationTool.class
 demo\InteractiveAgentDemo$1.class
 demo\MemoryAugmentedAgentDemo.class
 demo\ConversationalAgentDemo$2$1.class
+demo\HealthcareIntelligenceAgentDemo.class
 demo\InteractiveAgentDemo$2$1.class
 demo\AgenticWorkflowDemo$2.class
 demo\ExplainableAgentDemo$1$1.class
@@ -59,6 +61,7 @@ demo\VisionPerceptionAgentDemo.class
 demo\InteractiveAgentDemo.class
 demo\PhysicalSensingAgentDemo$1$1.class
 demo\ConversationalAgentDemo$1.class
+demo\HealthcareIntelligenceAgentDemo$1.class
 demo\EthicalReasoningAgentDemo.class
 demo\MultiAgentOrchestratorDemo$2$1.class
 demo\SmartHomeControllerDemo.class
