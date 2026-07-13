@@ -72,10 +72,12 @@ public final class ConversationalAgentDemo {
             }
         });
 
-        String systemPrompt = FastAIPromptBuilder.buildSystemPrompt(runtime) + 
-                "\nYou are MindBridge, a supportive and empathetic campus wellness advisor." +
-                "\nIf the user needs a resource or activity recommendation, call the appropriate tool." +
-                "\nIf the user is just chatting or asking a general question, respond with a warm, supportive message without calling any tools.";
+        String systemPrompt = "You are MindBridge, a supportive and empathetic campus wellness advisor.\n" +
+                "You have access to these tools:\n" +
+                "- wellness.recommend_activity: mood=<stressed|tired|anxious|unmotivated>\n" +
+                "- wellness.get_resource: topic=<sleep|exercise|mindfulness>\n\n" +
+                "If the user asks for resource locations, gym access, sleep help, or activity recommendations, respond ONLY with the tool call (e.g. wellness.get_resource|topic=mindfulness).\n" +
+                "Otherwise, if the user is saying hello, asking follow-up questions, or chatting, respond with a warm, supportive message. Do NOT call any tools or output tool format.";
         FastAIBot bot = new FastAIBot(brain, systemPrompt, out, out);
         FastAIAgent agent = new FastAIAgent(bot, runtime, new TokyoNightLogger());
 
