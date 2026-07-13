@@ -41,8 +41,15 @@ public class FastAIPromptBuilder {
 
         prompt.append("Always answer with the precise tool call in plain text (do NOT wrap it in markdown code blocks). Give no explanation.\n");
         prompt.append("Output format: tool_name|parameter=value. Example:\n");
-        if (hasSave) {
-            prompt.append("file.save|path=target/reasoning_output.txt,content=Executed successfully.");
+        if (!runtime.getRegisteredTools().isEmpty()) {
+            FastTool sample = runtime.getRegisteredTools().iterator().next();
+            String desc = sample.description();
+            if (desc != null && !desc.isEmpty()) {
+                String sampleArgs = desc.replaceAll("<.+?>", "value");
+                prompt.append(sample.name()).append("|").append(sampleArgs);
+            } else {
+                prompt.append(sample.name());
+            }
         } else {
             prompt.append("tool_name|parameter=value");
         }
