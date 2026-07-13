@@ -3,6 +3,7 @@ demo\tools\RagSearchTool.class
 demo\SummarizationAgentDemo.class
 demo\tools\tui\TUIDrawPanelTool$Obs.class
 demo\tools\tui\TUIDrawTextTool.class
+demo\ContentCreatorAgentDemo.class
 demo\ConversationalAgentDemo.class
 demo\tools\tui\TUIClearTool$Obs.class
 demo\ToolUsingAgentDemo.class
