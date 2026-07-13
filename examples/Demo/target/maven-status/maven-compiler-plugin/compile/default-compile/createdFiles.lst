@@ -50,6 +50,7 @@ demo\tools\tui\TUIDrawBoxTool.class
 demo\tools\tui\TUIClearTool.class
 demo\TuiBuilderAgentDemo.class
 demo\InteractiveAgentDemo$1$1.class
+demo\UtilityClass.class
 demo\InteractiveAgentDemo$2.class
 demo\tools\tui\TUIDrawPanelTool.class
 demo\VerificationAgentDemo$1.class
