@@ -75,7 +75,7 @@ public final class EthicalReasoningAgentDemo {
         // Run Step 2: Ethical Filtering and Shortlisting
         System.out.println("\n--- STEP 2: ETHICAL SHORTLIST FILTERING ---");
         saveAgent.run(String.format(
-            "file.save|path=target/shortlist.txt,content=Apply ethical filtering. Identify qualified candidates from this list, ignoring age and gender, and save the result:\n%s",
+            "Based on the following candidate list, filter out candidates with no technical skills, ignore age and gender completely to be fair, and save the final qualified shortlist to target/shortlist.txt:\n%s",
             candidateList
         ));
     }
