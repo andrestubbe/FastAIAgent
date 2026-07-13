@@ -20,6 +20,7 @@ demo\AgenticWorkflowDemo$2$1.class
 demo\PlanningAgentDemo.class
 demo\DataAnalysisAgentDemo.class
 demo\MultiStepReasoningAgentDemo.class
+demo\PhysicalSensingAgentDemo$2.class
 demo\VerificationAgentDemo.class
 demo\BrowserAutomationAgentDemo.class
 demo\MultiAgentOrchestratorDemo$1.class
@@ -44,6 +45,7 @@ demo\RecommendationAgentDemo$1.class
 demo\VisionPerceptionAgentDemo$1$2.class
 demo\AgenticWorkflowDemo$1$1.class
 demo\AgenticWorkflowDemo.class
+demo\PhysicalSensingAgentDemo.class
 demo\DocumentQAAgentDemo.class
 demo\SmartHomeControllerDemo$1$2.class
 demo\SmartHomeControllerDemo$2.class
@@ -52,6 +54,7 @@ demo\AudioProcessingAgentDemo$2$1.class
 demo\GeneralProblemSolverDemo.class
 demo\VisionPerceptionAgentDemo.class
 demo\InteractiveAgentDemo.class
+demo\PhysicalSensingAgentDemo$1$1.class
 demo\ConversationalAgentDemo$1.class
 demo\MultiAgentOrchestratorDemo$2$1.class
 demo\SmartHomeControllerDemo.class
@@ -69,10 +72,12 @@ demo\InteractiveAgentDemo$1$1.class
 demo\VisionPerceptionAgentDemo$1.class
 demo\UtilityClass.class
 demo\ConversationalAgentDemo$1$1.class
+demo\PhysicalSensingAgentDemo$2$1.class
 demo\InteractiveAgentDemo$2.class
 demo\tools\tui\TUIDrawPanelTool.class
 demo\VerificationAgentDemo$1.class
 demo\RetrievalAgentDemo.class
+demo\PhysicalSensingAgentDemo$1.class
 demo\AgenticWorkflowDemo$1.class
 demo\SystemControlAgentDemo.class
 demo\SmartHomeControllerDemo$2$1.class
