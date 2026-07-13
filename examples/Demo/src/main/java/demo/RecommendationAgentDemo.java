@@ -59,6 +59,6 @@ public final class RecommendationAgentDemo {
 
         // Step 2: Personalize & Save Recommendations
         System.out.println("\n--- STEP 2: PERSONALIZING & SAVING RECOMMENDATIONS ---");
-        agent.run(String.format("Recommend the best book matching interests '%s' and save it to target/recommendations.txt", userInterests));
+        agent.run(String.format("Recommend the best book matching interests '%s' and save it using the file.save tool to path target/recommendations.txt", userInterests));
     }
 }
