@@ -8,6 +8,7 @@ demo\HealthcareIntelligenceAgentDemo$1$1.class
 demo\AudioProcessingAgentDemo$1$1.class
 demo\ContentCreatorAgentDemo.class
 demo\ConversationalAgentDemo.class
+demo\ScientificDiscoveryAgentDemo$1$1.class
 demo\tools\tui\TUIClearTool$Obs.class
 demo\ToolUsingAgentDemo.class
 demo\tools\ChartGenerationTool$SimpleObservation.class
@@ -27,6 +28,7 @@ demo\VerificationAgentDemo.class
 demo\BrowserAutomationAgentDemo.class
 demo\MultiAgentOrchestratorDemo$1.class
 demo\ConversationalAgentDemo$2.class
+demo\ScientificDiscoveryAgentDemo$1.class
 demo\tools\ChartGenerationTool.class
 demo\InteractiveAgentDemo$1.class
 demo\MemoryAugmentedAgentDemo.class
@@ -71,6 +73,7 @@ demo\VisionPerceptionAgentDemo$1$1.class
 demo\EthicalReasoningAgentDemo$1.class
 demo\MultiAgentOrchestratorDemo$2.class
 demo\tools\RagSearchTool$SimpleObservation.class
+demo\ScientificDiscoveryAgentDemo.class
 demo\tools\tui\TUIDrawBoxTool$Obs.class
 demo\FileManipulationAgentDemo.class
 demo\tools\tui\TUIDrawBoxTool.class

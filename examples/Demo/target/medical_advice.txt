@@ -1,0 +1,3 @@
+RED FLAG: Threat to life (suspected cardiac event).\n\
+Trigger immediate emergency room escalation.\n\
+Do not delay.
