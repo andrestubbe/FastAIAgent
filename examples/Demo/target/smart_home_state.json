@@ -1,5 +1,5 @@
 {
-  "light": "OFF",
+  "light": "PERCENTAGE",
   "tv": "ON",
-  "ac": "OFF"
+  "ac": "TEMPREATURE"
 }
