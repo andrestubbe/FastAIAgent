@@ -45,6 +45,7 @@ demo\RecommendationAgentDemo$1.class
 demo\VisionPerceptionAgentDemo$1$2.class
 demo\AgenticWorkflowDemo$1$1.class
 demo\AgenticWorkflowDemo.class
+demo\EthicalReasoningAgentDemo$1$1.class
 demo\PhysicalSensingAgentDemo.class
 demo\DocumentQAAgentDemo.class
 demo\SmartHomeControllerDemo$1$2.class
@@ -56,10 +57,12 @@ demo\VisionPerceptionAgentDemo.class
 demo\InteractiveAgentDemo.class
 demo\PhysicalSensingAgentDemo$1$1.class
 demo\ConversationalAgentDemo$1.class
+demo\EthicalReasoningAgentDemo.class
 demo\MultiAgentOrchestratorDemo$2$1.class
 demo\SmartHomeControllerDemo.class
 demo\VerificationAgentDemo$1$1.class
 demo\VisionPerceptionAgentDemo$1$1.class
+demo\EthicalReasoningAgentDemo$1.class
 demo\MultiAgentOrchestratorDemo$2.class
 demo\tools\RagSearchTool$SimpleObservation.class
 demo\tools\tui\TUIDrawBoxTool$Obs.class
