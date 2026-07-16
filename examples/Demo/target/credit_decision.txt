@@ -1,7 +1,0 @@
-Detailed step by step reasoning:
-
-1. The customer provided credit score is 'Credit Score: 720'.
-2. According to our predefined threshold for loan approval (score >= 700), I can approve this loan.
-3. Confidence level: 95% as the customer's score of 720 meets and exceeds 700.
-
-Final Decision: APPROVED

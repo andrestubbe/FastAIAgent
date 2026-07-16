@@ -1,1 +1,0 @@
-{{"Anna": "23,1 year Python experience"}, {"Bob": "58,15 years Java, Spring Boot experience"}}
