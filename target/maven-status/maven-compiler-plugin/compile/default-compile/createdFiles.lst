@@ -1,5 +1,11 @@
+fastaiagent\FastAgentKernel$Observer.class
 fastaiagent\FastAIPromptBuilder.class
 fastaiagent\AgentLogger.class
+fastaiagent\FastAgentKernel$AgentPlan.class
 fastaiagent\FastAIAgent$ParsedCommand.class
 fastaiagent\FastAIAgent.class
+fastaiagent\FastAgentKernel$Reflector.class
+fastaiagent\FastAgentKernel$Planner.class
+fastaiagent\FastAgentKernel.class
+fastaiagent\FastAgentKernel$AgentAction.class
 fastaiagent\FastAIAgent$1.class

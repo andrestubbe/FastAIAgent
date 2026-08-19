@@ -60,8 +60,8 @@
         <!-- FastAIBot dependency -->
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
-            <artifactId>FastAIBot</artifactId>
-            <version>0.1.0</version>
+            <artifactId>fastaibot</artifactId>
+            <version>0.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
