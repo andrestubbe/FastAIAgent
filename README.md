@@ -56,6 +56,7 @@ public class Demo {
 
 - [Why FastAIAgent?](#why-fastaiagent)
 - [Key Features](#key-features)
+- [Real-World Use Cases](#real-world-use-cases)
 - [Architecture Overview](#architecture-overview)
 - [API Quick Reference](#api-quick-reference)
 - [Examples & Demos](#examples--demos)
@@ -85,6 +86,15 @@ Traditional agent frameworks in Python (`LangChain`, `CrewAI`, `AutoGen`) and Ja
 - **📡 FastAIEventBus Observability** — Real-time event subscription for step logs, token traces, and tool telemetry.
 - **⚡ Deterministic OS Execution** — Direct file, keyboard, mouse, process, and CLI management via `FastAIRuntime`.
 - **💾 Stateful Conversation Memory** — Native integration with `FastAIMemory` and `FastAIBot`.
+
+---
+
+## Real-World Use Cases
+
+- **🛠️ Self-Healing CI/CD Pipelines** — Automatically parses compiler error logs and test failure stack traces, locates the offending source files, and applies targeted patches (`file.edit`) to restore green builds.
+- **🔄 Autonomous Codebase Refactoring** — Scans repository structure via `FastAIRuntime`, upgrades deprecated API calls, and normalizes formatting across hundreds of Java classes without developer intervention.
+- **🧪 Test Suite Generation & Verification** — Observes existing production classes, generates corresponding JUnit test suites (`file.save`), and executes `mvn test` in a loop until full coverage is verified.
+- **🖥️ Desktop & OS-Level Automation** — Orchestrates multi-step developer setup flows by combining shell commands with native UI interactions (UIA / Notepad / System tools).
 
 ---
 
