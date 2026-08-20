@@ -136,6 +136,8 @@ Powers streaming model inference with local and cloud models.
 
 ### Option 1: Maven (Recommended)
 
+Add the JitPack repository and the dependencies to your `pom.xml`:
+
 ```xml
 <repositories>
     <repository>
@@ -155,6 +157,16 @@ Powers streaming model inference with local and cloud models.
         <artifactId>FastAIRuntime</artifactId>
         <version>0.1.0</version>
     </dependency>
+    <dependency>
+        <groupId>com.github.andrestubbe</groupId>
+        <artifactId>FastAIMemory</artifactId>
+        <version>0.1.3</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.andrestubbe</groupId>
+        <artifactId>fastai</artifactId>
+        <version>0.1.4</version>
+    </dependency>
 </dependencies>
 ```
 
@@ -168,8 +180,22 @@ repositories {
 dependencies {
     implementation 'com.github.andrestubbe:FastAIAgent:0.1.5'
     implementation 'com.github.andrestubbe:FastAIRuntime:0.1.0'
+    implementation 'com.github.andrestubbe:FastAIMemory:0.1.3'
+    implementation 'com.github.andrestubbe:fastai:0.1.4'
 }
 ```
+
+### Option 3: Direct Download (No Build Tool)
+
+Download the latest JARs directly to add them to your classpath:
+
+1. 🧠 **[FastAIAgent-0.1.5.jar](https://github.com/andrestubbe/FastAIAgent/releases/download/0.1.5/FastAIAgent-0.1.5.jar)** (Cognitive Engine)
+2. ⚙️ **[FastAIRuntime-0.1.0.jar](https://github.com/andrestubbe/FastAIRuntime/releases/download/0.1.0/FastAIRuntime-0.1.0.jar)** (Execution Harness)
+3. 💾 **[FastAIMemory-0.1.3.jar](https://github.com/andrestubbe/FastAIMemory/releases/download/0.1.3/FastAIMemory-0.1.3.jar)** (Conversation Memory)
+4. 🤖 **[fastai-0.1.4.jar](https://github.com/andrestubbe/FastAI/releases/download/0.1.4/fastai-0.1.4.jar)** (Unified AI Client)
+
+> [!IMPORTANT]
+> All JARs must be included in your classpath for the agent runtime and memory layers to function correctly.
 
 ---
 
