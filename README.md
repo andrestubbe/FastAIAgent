@@ -54,14 +54,9 @@ FastAIAgent solves this with:
 
 ## The Autonomous Coding Loop
 
-```mermaid
-flowchart LR
-    A[1. Observe] --> B[2. Plan]
-    B --> C[3. Act]
-    C --> D[4. Reflect]
-    D --> E[5. Memory]
-    E -->|Next Cycle| A
-```
+<p align="center">
+  <img src="docs/coding_loop_diagram.jpg" alt="Autonomous ReAct Coding Agent Loop" width="850">
+</p>
 
 ---
 
