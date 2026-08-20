@@ -1,4 +1,4 @@
-# FastAIAgent 0.1.5 — Autonomous Cognitive Engine & Coding Loop for Java
+# FastAIAgent 0.1.5 — Cognitive Mind and Autonomous Coding Engine for Java
 
 [![Status](https://img.shields.io/badge/status-0.1.5-brightgreen.svg)](https://github.com/andrestubbe/FastAIAgent/releases/tag/0.1.5)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,9 +8,47 @@
 
 ---
 
-**💡 The first truly autonomous Java Coding Agent & Cognitive Planning Layer — Observe, Plan, Act, Reflect, and Self-Heal with Zero Bloat.**
+**⚡ Autonomous ReAct coding loops and cognitive planning for Java — Decoupled execution mind orchestrating file authoring, terminal commands, and self-healing.**
 
-FastAIAgent delivers a native, lightweight cognitive loop for building autonomous AI agents in pure Java. Powered by the **5-step ReAct loop** (`Observe → Plan → Act → Reflect → Memory`), it introduces the first pure Java agent capable of self-directed code authoring, syntax verification, refactoring, and deterministic OS execution via `FastAIRuntime`.
+FastAIAgent is a **high-performance, framework-agnostic cognitive agent engine** for the JVM. It implements the formal **5-step ReAct coding loop** (`Observe → Plan → Act → Reflect → Memory`) to enable autonomous coding agents that inspect codebases, write/edit project files, run CLI tools, and correct build errors with zero framework bloat.
+
+<p align="center">
+  <img src="docs/coding_loop_diagram.jpg" alt="Autonomous Coding Agent State Machine" width="850">
+</p>
+
+---
+
+## Quick Start — Example
+
+```java
+import fastaiagent.FastAgentKernel;
+import fastairuntime.FastAIRuntime;
+import fastairuntime.tools.CommandRunnerTool;
+import fastairuntime.tools.FileEditTool;
+import fastairuntime.tools.FileReadTool;
+import fastairuntime.tools.FileSaveTool;
+
+public class Demo {
+    public static void main(String[] args) {
+        // 1. Setup deterministic OS toolchain harness
+        FastAIRuntime runtime = new FastAIRuntime();
+        runtime.register(new FileReadTool());
+        runtime.register(new FileSaveTool());
+        runtime.register(new FileEditTool());
+        runtime.register(new CommandRunnerTool());
+
+        // 2. Initialize Autonomous Coding Kernel
+        FastAgentKernel kernel = new FastAgentKernel(runtime,
+            () -> runtime.execute(new fastairuntime.FastCommand("file.read", java.util.Map.of("path", "src/Main.java"))),
+            (goal, obs, plan) -> /* AI / LLM reasoning planner */,
+            (plan, result) -> result.success() ? "OK" : "Error: " + result.message()
+        );
+
+        // 3. Execute goal-driven ReAct loop
+        kernel.loop("Create, compile, and fix Calculator.java", 10);
+    }
+}
+```
 
 ---
 
@@ -18,81 +56,85 @@ FastAIAgent delivers a native, lightweight cognitive loop for building autonomou
 
 - [Why FastAIAgent?](#why-fastaiagent)
 - [Key Features](#key-features)
-- [The Autonomous Coding Loop](#the-autonomous-coding-loop)
-- [Quick Start](#quick-start)
-- [Installation](#installation)
-- [API Reference](#api-reference)
+- [Architecture Overview](#architecture-overview)
+- [API Quick Reference](#api-quick-reference)
 - [Examples & Demos](#examples--demos)
-- [Architecture](#architecture)
-- [Performance & Comparison](#performance--comparison)
-- [Related Projects](#related-projects)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Platform Support](#platform-support)
 - [License](#license)
+- [Related Projects](#related-projects)
 
 ---
 
 ## Why FastAIAgent?
 
-Most agent frameworks in Python and Java are bloated, unpredictable, and tightly coupled with heavy cloud SDKs.
+Traditional agent frameworks in Python (`LangChain`, `CrewAI`, `AutoGen`) and Java (`LangChain4j`) are bloated, slow, and impose heavy framework locks. `FastAIAgent` delivers:
 
-FastAIAgent solves this with:
-- **Autonomous Coding Loop**: First Java-native ReAct kernel that creates, modifies, and patches project files autonomously.
-- **Decoupled Architecture**: Clean separation between **Mind** (`FastAIAgent` / LLM reasoning) and **Body** (`FastAIRuntime` / OS-level deterministic execution).
-- **Single Source of Truth**: Full plan rewriting prevents task drift and keeps multi-turn workflows stable.
-- **Zero Framework Bloat**: No LangChain, no Spring AI, pure Java 17+ with sub-millisecond execution overhead.
+- **Autonomous Coding Agent Loop** — Self-directed file inspection, precise line editing (`file.edit`), shell execution, and compile verification.
+- **Strict Mind-Body Separation** — Thought & planning (`FastAIAgent`) is completely decoupled from deterministic OS execution (`FastAIRuntime`).
+- **Single Source of Truth** — Full plan rewriting prevents drift across multi-step execution turns.
+- **Zero Framework Bloat** — Pure Java 17+ with sub-millisecond execution overhead and minimal dependencies.
 
 ---
 
 ## Key Features
 
-- **💻 Native Java Coding Agent**: Autonomous code generation, file tree discovery, precise string replacement (`file.edit`), and compilation.
-- **🧠 5-Stage Cognitive Loop**: Formalized `Observe → Plan → Act → Reflect → Memory` state machine.
-- **📡 FastAIEventBus Integration**: Complete observability, event subscription, and real-time step streaming.
-- **⚡ Deterministic Tool Execution**: Direct hardware-level file, terminal, keyboard, mouse, and process control via `FastAIRuntime`.
-- **💾 Stateful Memory**: Seamless integration with `FastAIMemory` and `FastAIBot`.
+- **💻 Autonomous Code Authoring & Patching** — Create, inspect, patch (`file.edit`), and compile Java source files.
+- **🧠 5-Stage Cognitive Loop** — Native state machine for `Observe → Plan → Act → Reflect → Memory`.
+- **📡 FastAIEventBus Observability** — Real-time event subscription for step logs, token traces, and tool telemetry.
+- **⚡ Deterministic OS Execution** — Direct file, keyboard, mouse, process, and CLI management via `FastAIRuntime`.
+- **💾 Stateful Conversation Memory** — Native integration with `FastAIMemory` and `FastAIBot`.
 
 ---
 
-## The Autonomous Coding Loop
+## Architecture Overview
 
-<p align="center">
-  <img src="docs/coding_loop_diagram.jpg" alt="Autonomous ReAct Coding Agent Loop" width="850">
-</p>
+**[FastAIAgent](https://github.com/andrestubbe/FastAIAgent) (The Mind)**  
+Orchestrates the cognitive ReAct loop, task planning, and reflection over results.
+
+**[FastAIRuntime](https://github.com/andrestubbe/FastAIRuntime) (The Body & Harness)**  
+Provides deterministic OS-level tool execution (`file.read`, `file.save`, `file.edit`, `cmd.run`, UIA, keyboard, mouse) and security gates.
+
+**[FastAIMemory](https://github.com/andrestubbe/FastAIMemory) (The Memory)**  
+Maintains structured conversation history, context windows, and episodic state.
+
+**[FastAI](https://github.com/andrestubbe/FastAI) (The LLM Client)**  
+Powers streaming model inference with local and cloud models.
 
 ---
 
-## Quick Start
+## API Quick Reference
 
-### Autonomous Coding Loop Example
+| Class / Method | Return Type | Description |
+|---|---|---|
+| `FastAgentKernel(runtime, obs, planner, reflector)` | `FastAgentKernel` | Constructs the 5-step ReAct coding agent kernel. |
+| `kernel.loop(goal, maxCycles)` | `void` | Executes the Observe-Plan-Act-Reflect cycle until the goal is met. |
+| `FastAIEventBus.getInstance()` | `FastAIEventBus` | Accesses the global agent event dispatcher for observability. |
+| `FastAIPromptBuilder.buildSystemPrompt(runtime)` | `String` | Generates a tool-definition system prompt from registered tools. |
+| `FastAIAgent(bot, runtime, logger)` | `FastAIAgent` | Standard conversational agent with tool-call parsing and execution. |
 
-```java
-import fastaiagent.FastAgentKernel;
-import fastairuntime.FastAIRuntime;
-import fastairuntime.tools.*;
+---
 
-public class QuickStart {
-    public static void main(String[] args) {
-        FastAIRuntime runtime = new FastAIRuntime();
-        runtime.register(new FileReadTool());
-        runtime.register(new FileSaveTool());
-        runtime.register(new FileEditTool());
-        runtime.register(new CommandRunnerTool());
+## Examples & Demos
 
-        FastAgentKernel kernel = new FastAgentKernel(runtime,
-            () -> runtime.execute(new fastairuntime.FastCommand("dir.list", java.util.Map.of("path", "."))),
-            (goal, obs, plan) -> /* AI or State-Machine Planner */,
-            (plan, result) -> result.success() ? "OK" : "Failed: " + result.message()
-        );
+`FastAIAgent` provides 34+ runnable standalone demos in `examples/Demo/`:
 
-        kernel.loop("Create and test Calculator.java", 10);
-    }
-}
-```
+| Script | Class | Demonstrates |
+|---|---|---|
+| `run-34-coding-agent-loop-demo.bat` | `CodingAgentLoopDemo` | **Autonomous Coding Agent**: File creation, inspection, refactoring (`file.edit`) |
+| `run-34a-observe-sub-demo.bat` | `CodingObserveSubDemo` | Phase 1: Environment & Workspace Observation |
+| `run-34b-plan-act-sub-demo.bat` | `CodingPlanActSubDemo` | Phase 2 & 3: Plan Formulation & Deterministic Execution |
+| `run-34c-reflect-sub-demo.bat` | `CodingReflectSubDemo` | Phase 4: Self-Reflection & Error Recovery |
+| `run-01-planning-agent-demo.bat` | `PlanningAgentDemo` | Multi-step planning and Notepad execution |
+| `run-05-file-manipulation-agent-demo.bat` | `FileManipulationAgentDemo` | File system operations |
+| `run-16-multi-agent-orchestrator-demo.bat` | `MultiAgentOrchestratorDemo` | Multi-agent coordination |
 
 ---
 
 ## Installation
 
-### Maven (JitPack)
+### Option 1: Maven (Recommended)
 
 ```xml
 <repositories>
@@ -116,33 +158,44 @@ public class QuickStart {
 </dependencies>
 ```
 
----
+### Option 2: Gradle (via JitPack)
 
-## Examples & Demos
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 
-FastAIAgent comes with 34+ comprehensive demos in `examples/Demo/`:
-
-| Script | Class | Description |
-|---|---|---|
-| `run-34-coding-agent-loop-demo.bat` | `CodingAgentLoopDemo` | **Full Autonomous Coding Agent**: Creates, inspects, and patches Java source code |
-| `run-34a-observe-sub-demo.bat` | `CodingObserveSubDemo` | Phase 1: Environment & Workspace Observation |
-| `run-34b-plan-act-sub-demo.bat` | `CodingPlanActSubDemo` | Phase 2 & 3: Plan Formulation & Tool Execution |
-| `run-34c-reflect-sub-demo.bat` | `CodingReflectSubDemo` | Phase 4: Self-Reflection & Error Recovery |
-| `run-01-planning-agent-demo.bat` | `PlanningAgentDemo` | Single-step planning and Notepad execution |
-| `run-05-file-manipulation-agent-demo.bat` | `FileManipulationAgentDemo` | File system operations |
-| `run-16-multi-agent-orchestrator-demo.bat` | `MultiAgentOrchestratorDemo` | Multi-agent coordination |
+dependencies {
+    implementation 'com.github.andrestubbe:FastAIAgent:0.1.5'
+    implementation 'com.github.andrestubbe:FastAIRuntime:0.1.0'
+}
+```
 
 ---
 
-## Performance & Comparison
+## Documentation
 
-| Feature / Metric | Python Coding Agents | LangChain4j Agents | FastAIAgent |
-|---|---|---|---|
-| **JVM Native** | ❌ No | ⚠️ Framework-heavy |  **Pure Java 17+** |
-| **Startup Overhead** | ~2.5s | ~1.8s | **< 20ms** |
-| **OS Toolchain Execution** | External wrappers | Generic Java I/O |  **Native `FastAIRuntime`** |
-| **Drift Prevention** | Incomplete | None |  **Full-Plan Regeneration** |
-| **Dependencies** | 20+ PIP packages | 15+ JARs |  **Minimal FastJava Suite** |
+* **[REFERENCE.md](docs/REFERENCE.md)**: Core API reference manual.
+* **[PHILOSOPHY.md](docs/PHILOSOPHY.md)**: ReAct coding loop and decoupled architecture design.
+* **[COMPILE.md](docs/COMPILE.md)**: Maven build instructions.
+* **[CHANGELOG.md](docs/CHANGELOG.md)**: Project history.
+* **[ROADMAP.md](docs/ROADMAP.md)**: Future development goals.
+
+---
+
+## Platform Support
+
+| Platform | Status |
+|---|---|
+| Windows 10/11 (x64) | ✅ Fully Supported |
+| Linux | 🚧 Planned |
+| macOS | 🚧 Planned |
+
+---
+
+## License
+
+MIT License — See [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -150,12 +203,12 @@ FastAIAgent comes with 34+ comprehensive demos in `examples/Demo/`:
 
 - [FastAIRuntime](https://github.com/andrestubbe/FastAIRuntime) — Deterministic tool execution engine and OS harness
 - [FastAI](https://github.com/andrestubbe/FastAI) — Unified AI client interface for Java
-- [FastAIMemory](https://github.com/andrestubbe/FastAIMemory) — Conversation history and memory formatters
-- [FastAIBot](https://github.com/andrestubbe/FastAIBot) — Real-time conversational bot orchestrator
-- [FastCore](https://github.com/andrestubbe/FastCore) — Unified JNI loader and platform abstraction
+- [FastAIMemory](https://github.com/andrestubbe/FastAIMemory) — Unified conversation memory and formatters
+- [FastAIRag](https://github.com/andrestubbe/FastAIRag) — Unified RAG pipeline client for Java
+- [FastAIVectorDB](https://github.com/andrestubbe/FastAIVectorDB) — High-speed native C++ SIMD vector database
+- [FastAIBot](https://github.com/andrestubbe/FastAIBot) — Autonomous conversational AI bot engine
+- [FastCore](https://github.com/andrestubbe/FastCore) — Native JNI loader for FastJava libraries
 
 ---
 
-## License
-
-MIT License. See [LICENSE](LICENSE) for details.
+**Part of the FastJava Ecosystem** — *Making the JVM faster. Small package. Maximum speed. Zero bloat. 🚀📋*
