@@ -128,10 +128,12 @@ Powers streaming model inference with local and cloud models.
 
 ## Examples & Demos
 
-`FastAIAgent` provides 34+ runnable standalone demos in `examples/Demo/`:
+`FastAIAgent` provides 36+ runnable standalone demos in `examples/Demo/`:
 
 | Script | Class | Demonstrates |
 |---|---|---|
+| `run-35-reasoner-guided-coding-demo.bat` | `ReasonerGuidedCodingDemo` | **Tree-of-Thoughts Guided Coding**: Multi-branch architectural exploration via `FastAIReasoner` |
+| `run-36-self-healing-reflection-demo.bat` | `SelfHealingReflectionDemo` | **Chain-of-Thought Self-Healing**: Compiler diagnosis & automated patch repair |
 | `run-34-coding-agent-loop-demo.bat` | `CodingAgentLoopDemo` | **Autonomous Coding Agent**: File creation, inspection, refactoring (`file.edit`) |
 | `run-34a-observe-sub-demo.bat` | `CodingObserveSubDemo` | Phase 1: Environment & Workspace Observation |
 | `run-34b-plan-act-sub-demo.bat` | `CodingPlanActSubDemo` | Phase 2 & 3: Plan Formulation & Deterministic Execution |

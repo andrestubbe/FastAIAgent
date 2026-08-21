@@ -74,6 +74,12 @@
             <artifactId>FastEmojis</artifactId>
             <version>0.1.0</version>
         </dependency>
+        <!-- FastAIReasoner dependency -->
+        <dependency>
+            <groupId>com.github.andrestubbe</groupId>
+            <artifactId>FastAIReasoner</artifactId>
+            <version>0.1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
