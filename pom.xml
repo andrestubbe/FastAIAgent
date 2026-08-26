@@ -6,7 +6,7 @@
 
     <groupId>com.github.andrestubbe</groupId>
     <artifactId>FastAIAgent</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.6</version>
     <packaging>jar</packaging>
 
     <name>FastAIAgent</name>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
             <artifactId>FastAI</artifactId>
-            <version>0.1.5</version>
+            <version>0.1.14</version>
         </dependency>
         <!-- FastAIRuntime dependency -->
         <dependency>
