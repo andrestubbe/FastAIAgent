@@ -1,3 +1,6 @@
+> [!WARNING]
+> **🚧 WIP — Active AI Pipeline Construction & Architecture Optimization in Progress.**
+
 # FastAIAgent 0.1.7 — Cognitive Mind and Autonomous Coding Engine for Java
 
 [![Status](https://img.shields.io/badge/status-0.1.7-brightgreen.svg)](https://github.com/andrestubbe/FastAIAgent/releases/tag/0.1.7)
