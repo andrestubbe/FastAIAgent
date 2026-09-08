@@ -15,9 +15,12 @@
 
 FastAIAgent is a **high-performance, framework-agnostic cognitive agent engine** for the JVM. It implements the formal **5-step ReAct coding loop** (`Observe → Plan → Act → Reflect → Memory`) to enable autonomous coding agents that inspect codebases, write/edit project files, run CLI tools, and correct build errors with zero framework bloat.
 
+[Watch Demo (YouTube)] | [Watch JMH Benchmark (Youtube)]
+
 <p align="center">
   <img src="docs/coding_loop_diagram.jpg" alt="Autonomous Coding Agent State Machine" width="850">
 </p>
+
 
 ---
 
