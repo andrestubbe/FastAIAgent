@@ -72,7 +72,13 @@ public class Demo {
 
 ## Why FastAIAgent?
 
-Traditional agent frameworks in Python (`LangChain`, `CrewAI`, `AutoGen`) and Java (`LangChain4j`) are bloated, slow, and impose heavy framework locks:
+Traditional agent frameworks in Python (`LangChain`, `CrewAI`, `AutoGen`) and Java (`LangChain4j`) are bloated, slow, and impose heavy framework locks. They mix planning, execution, and state into monolithic abstractions that are difficult to inspect and verify.
+
+FastAIAgent delivers clean, deterministic cognitive computing through three principles:
+
+- **Autonomous Coding Engine**: A self-directed ReAct loop executing code inspection, targeted line editing (`file.edit`), shell tasks, and compiler repair.
+- **Mind/Body Decoupling**: Cognitive reasoning (`FastAIAgent`) is completely isolated from OS-level tool execution (`FastAIRuntime`), preventing side-effects and securing the harness.
+- **Single Source of Truth**: Dynamic plan rewriting on every turn prevents execution drift across long multi-step coding objectives.
 
 | Feature | LangChain / LangChain4j | FastAIAgent |
 |:---|:---|:---|
