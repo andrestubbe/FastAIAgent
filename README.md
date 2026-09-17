@@ -72,22 +72,27 @@ public class Demo {
 
 ## Why FastAIAgent?
 
-Traditional agent frameworks in Python (`LangChain`, `CrewAI`, `AutoGen`) and Java (`LangChain4j`) are bloated, slow, and impose heavy framework locks. They mix planning, execution, and state into monolithic abstractions that are difficult to inspect and verify.
+Traditional agent frameworks in Python (`CrewAI`, `AutoGen`) and Java (`LangChain4j`) are bloated, slow, and impose heavy framework locks:
+
+1. **Monolithic & Bloated Abstractions**: Frameworks mix planning, execution, and state into opaque chains that are difficult to inspect, test, and safely constrain.
+2. **Execution Drift on Long Tasks**: Traditional agents lack dynamic plan rewriting between turns, causing them to drift off-target during complex multi-step coding objectives.
+3. **Coupled Runtime Side-Effects**: Blending cognitive reasoning directly with OS-level tool execution creates security risks and unpredictable execution state.
+4. **Heavy Framework Lock-In**: Pushing external agent runtimes introduces heavy dependency trees, complex reflection, and excessive JVM heap churn.
 
 FastAIAgent delivers clean, deterministic cognitive computing through three principles:
 
 - **Autonomous Coding Engine**: A self-directed ReAct loop executing code inspection, targeted line editing (`file.edit`), shell tasks, and compiler repair.
-- **Mind/Body Decoupling**: Cognitive reasoning (`FastAIAgent`) is completely isolated from OS-level tool execution (`FastAIRuntime`), preventing side-effects and securing the harness.
-- **Single Source of Truth**: Dynamic plan rewriting on every turn prevents execution drift across long multi-step coding objectives.
+- **Mind/Body Decoupling**: Cognitive reasoning (`FastAIAgent`) is completely isolated from OS-level tool execution (`FastAIRuntime`), securing the harness.
+- **Single Source of Truth**: Dynamic plan rewriting on every turn prevents execution drift across long multi-step objectives.
 
-| Feature | LangChain / LangChain4j | FastAIAgent |
-|:---|:---|:---|
-| **Architecture** | Monolithic chain DSL | Strict Mind/Body separation (Agent + Runtime) |
-| **Execution Layer** | Abstracted away, hard to control | Deterministic `FastAIRuntime` with explicit tool registry |
-| **Cognitive Loop** | Chain-based, no formal state machine | Formal 5-step ReAct: `Observe → Plan → Act → Reflect → Memory` |
-| **Framework Lock** | Tight coupling to LangChain abstractions | Pure Java 21+, zero framework dependencies |
-| **Observability** | Limited hooks | `FastAIEventBus` real-time event subscription on every step |
-| **Self-Healing** | Manual error handling | Native compile-diagnose-patch loop via `FastAIReasoner` |
+| Feature | LangChain4j | CrewAI / AutoGen | FastAIAgent |
+|:---|:---|:---|:---|
+| **Architecture** | Monolithic chain DSL | Multi-agent conversation loop | Strict Mind/Body separation (Agent + Runtime) |
+| **Execution Layer** | Abstracted away (hard to control) | Python subprocess wrappers | Deterministic `FastAIRuntime` with tool registry |
+| **Cognitive Loop** | Chain-based, no formal state machine | Conversational chatter loop | Formal 5-step ReAct: `Observe → Plan → Act → Reflect → Memory` |
+| **Framework Lock** | Heavy LangChain abstractions | Python runtime / dependencies | Pure Java 21+, zero framework lock |
+| **Observability** | Limited logging hooks | Console prints / telemetry | `FastAIEventBus` real-time step & token trace |
+| **Self-Healing** | Manual error handling | Python exception crashes | Native compile-diagnose-patch loop |
 
 ---
 
